@@ -114,36 +114,6 @@ Hem fiziksel markette **canlı kamera** ile hem de online marketten **ekran gör
 
 ---
 
-## 🤖 AI Prompt Stratejisi
-
-Sistemin hızlı çalışması için doğrudan görsel yerine yalnızca **metin** LLM'e gönderilir.
-
-### Örnek — İçerik Modu Promptu
-
-```text
-[SİSTEM PROMPTU]
-Sen uzman bir diyetisyen ve toksikologsun. Aşağıdaki ürün içeriğini analiz et.
-Zararlı (kırmızı), dikkat edilmesi gereken (sarı) ve güvenli (yeşil) maddeleri ayır.
-JSON formatında dön.
-
-[KULLANICI VERİSİ — ML Kit çıktısı]
-İçindekiler: Su, Şeker, Glikoz şurubu, E211, Sitrik asit, Doğal aroma verici.
-```
-
-### Örnek — Beklenen JSON Çıktısı
-
-```json
-{
-  "red": ["E211 (Sodyum Benzoat) — Koruyucu, alerjik reaksiyona yol açabilir"],
-  "yellow": ["Glikoz şurubu — Yüksek glisemik indeks"],
-  "green": ["Su", "Sitrik asit", "Doğal aroma verici"]
-}
-```
-
-> **Not:** Halüsinasyon riskini azaltmak için `temperature: 0.1` olarak ayarlanmalıdır.
-
----
-
 ## 📖 Kullanıcı Hikayeleri
 
 | ID | Rol | İstek |
