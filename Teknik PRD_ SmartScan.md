@@ -1,174 +1,168 @@
-Teknik PRD: SmartScan - Akıllı Alışveriş Asistanı
+# 🚀 SmartScan — Akıllı Alışveriş Asistanı
 
-Proje Adı: SmartScan
-Platform: Mobil (iOS & Android)
-Geliştirme Ortamı: Flutter, Dart, Cursor (AI)
-Doküman Sürümü: v1.0
+> Yapay zeka destekli mobil vizyon asistanı: En uygun fiyatlı ve en sağlıklı ürünü saniyeler içinde bul.
 
-1. Proje Özeti (Executive Summary)
+---
 
-SmartScan, kullanıcıların market ve kozmetik alışverişlerinde "en uygun fiyatlı" ve "en sağlıklı" ürünü saniyeler içinde bulmalarını sağlayan yapay zeka destekli bir mobil vizyon asistanıdır. Canlı kamera veya galeriden yüklenen ekran görüntülerini (online marketler için) analiz ederek, karmaşık fiyat etiketlerini ve anlaşılamayan içerik listelerini basit, eyleme geçirilebilir içgörülere dönüştürür.
+## 📋 İçindekiler
 
-2. Problem Tanımı
+- [Proje Özeti](#-proje-özeti)
+- [Problem Tanımı](#-problem-tanımı)
+- [Çözüm](#-çözüm)
+- [Hedef Kitle](#-hedef-kitle)
+- [Kapsam ve Özellikler](#-kapsam-ve-özellikler-mvp)
+- [Teknik Mimari](#-teknik-mimari)
+- [Kullanıcı Akışı](#-kullanıcı-akışı)
+- [AI Prompt Stratejisi](#-ai-prompt-stratejisi)
+- [Kullanıcı Hikayeleri](#-kullanıcı-hikayeleri)
+- [Riskler ve Çözümler](#-riskler-ve-çözümler)
 
-Fiyat ve Gramaj Karmaşası: Market raflarında veya online alışverişte farklı gramajlara sahip ürünler arasında hangisinin birim bazında (örn. 1 kg veya 1 Litre) daha kârlı olduğunu zihinden hesaplamak zordur.
+---
 
-İçerik Okuryazarlığı Eksikliği: Ürünlerin (gıda ve kozmetik) arkasındaki içerik listeleri teknik, kimyasal ve karmaşık terimlerle (örn. INCI standartları, E-kodları) doludur. Tüketiciler ne yediklerini veya ciltlerine ne sürdüklerini tam olarak bilememektedir.
+## 📌 Proje Özeti
 
-Sürtünme (Friction): Mevcut çözümler genellikle barkod okutmaya dayanır; ancak barkodu sistemde olmayan veya online marketten ekran görüntüsü alınan ürünler analiz edilemez.
+**SmartScan**, kullanıcıların market ve kozmetik alışverişlerinde *en uygun fiyatlı* ve *en sağlıklı* ürünü saniyeler içinde bulmalarını sağlayan yapay zeka destekli bir mobil vizyon asistanıdır.
 
-3. Çözüm
+Canlı kamera veya galeriden yüklenen ekran görüntülerini analiz ederek, karmaşık fiyat etiketlerini ve anlaşılamayan içerik listelerini basit, eyleme geçirilebilir içgörülere dönüştürür.
 
-SmartScan, Barkod veritabanlarına bağımlı kalmadan, Görsel Metin Tanıma (OCR) ve Büyük Dil Modelleri (LLM) kullanarak doğrudan metni analiz eder.
+---
 
-Deal-Lens (Fiyat Modu): Etiketteki fiyatı ve gramajı okur, anında birim fiyatı hesaplar.
+## 🎯 Problem Tanımı
 
-Pure-Scan (İçerik Modu): İçindekiler listesini okur, maddeleri analiz eder ve "Trafik Işığı" (Kırmızı/Sarı/Yeşil) sistemiyle sağlık skorunu çıkarır.
+Mevcut alışveriş deneyiminde tüketiciler üç ana zorlukla karşılaşmaktadır:
 
-Omnichannel Yaklaşım: Hem fiziksel markette canlı kamera ile hem de online market alışverişlerinde galeriden ekran görüntüsü (screenshot) yükleyerek çalışır.
+| # | Problem | Açıklama |
+|---|---------|----------|
+| 1 | 🧮 **Fiyat ve Gramaj Karmaşası** | Farklı gramajlardaki ürünler arasında birim fiyatı (kg/L) zihinden hesaplamak bilişsel yüktür. |
+| 2 | 🧪 **İçerik Okuryazarlığı Eksikliği** | INCI standartları ve E-kodlarıyla dolu içerik listeleri tüketiciler tarafından anlaşılamamaktadır. |
+| 3 | 🚧 **Sürtünme (Friction)** | Mevcut barkod tabanlı çözümler, sistemde kayıtlı olmayan veya online marketten alınan ekran görüntülerini analiz edememektedir. |
 
-4. Hedef Kitle (Personalar)
+---
 
-Bilinçli Tüketiciler: Sağlıklı beslenmeye çalışanlar, diyet yapanlar, veganlar, temiz kozmetik arayanlar.
+## 💡 Çözüm
 
-Bütçe Yöneticileri: Enflasyonist ortamda en iyi fiyat/performans ürününü arayan aileler ve öğrenciler.
+SmartScan, barkod veritabanlarına bağımlı kalmadan **Görsel Metin Tanıma (OCR)** ve **Büyük Dil Modelleri (LLM)** kullanarak doğrudan "gördüğünü" analiz eder.
 
-Online Alışverişçiler: Getir, Yemeksepeti Market, Migros Hemen gibi uygulamalardan alışveriş yapıp ekran görüntüsü ile analiz yapmak isteyenler.
+### 💰 Deal-Lens — Fiyat Modu
+Etiketteki fiyatı ve gramajı okur, anında **birim fiyatı** hesaplar.
 
-5. Kapsam ve Temel Özellikler (MVP Scope)
+### 🌿 Pure-Scan — İçerik Modu
+İçindekiler listesini okur, maddeleri analiz eder ve **Trafik Işığı** sistemiyle sağlık skoru çıkarır.
 
-5.1. Kapsam Dahilinde Olanlar (In Scope)
+| Renk | Anlam |
+|------|-------|
+| 🔴 Kırmızı | Zararlı madde |
+| 🟡 Sarı | Dikkat edilmesi gereken madde |
+| 🟢 Yeşil | Güvenli madde |
 
-Modlu Tarama Ekranı: Ekranın altından yatay kaydırma ile "Fiyat" ve "İçerik" modları arasında geçiş.
+### 📱 Omnichannel Yaklaşım
+Hem fiziksel markette **canlı kamera** ile hem de online marketten **ekran görüntüsü yükleyerek** çalışır.
 
-Canlı Kamera (Live OCR): Kamera vizöründen gerçek zamanlı veri okuma.
+---
 
-Galeri Entegrasyonu: Galeriden fotoğraf / ekran görüntüsü yükleyip analiz etme (Image Picker).
+## 👥 Hedef Kitle
 
-AI Destekli İçerik Analizi: GPT-4o-mini destekli prompt mühendisliği ile içeriklerin sınıflandırılması (Zararlı, Dikkat Edilmeli, Güvenli).
+- **Bilinçli Tüketiciler** — Sağlıklı beslenmeye çalışanlar, diyet yapanlar, veganlar, temiz kozmetik arayanlar.
+- **Bütçe Yöneticileri** — Enflasyonist ortamda en iyi fiyat/performans ürününü arayan aileler ve öğrenciler.
+- **Online Alışverişçiler** — Getir, Yemeksepeti Market, Migros Hemen gibi uygulamalardan ekran görüntüsü ile analiz yapmak isteyenler.
 
-Birim Fiyat Hesaplayıcı: TL ve Gramaj/Litre verisini ayrıştırıp matematiksel oranlama yapma.
+---
 
-5.2. Kapsam Dışında Bırakılanlar (Out of Scope - v2.0)
+## 📦 Kapsam ve Özellikler (MVP)
 
-Kullanıcı Girişi (Auth) ve Bulut Senkronizasyonu.
+### ✅ Kapsam Dahilinde
 
-Kişiselleştirilmiş Alerji Profilleri (örn. "Ben gluten yiyemem" filtresi).
+- **Modlu Tarama Ekranı** — Alt bardan yatay kaydırma ile *Fiyat* ve *İçerik* modları arasında geçiş.
+- **Canlı Kamera (Live OCR)** — Kamera vizöründen gerçek zamanlı veri okuma.
+- **Galeri Entegrasyonu** — Fotoğraf veya ekran görüntüsü yükleyip analiz etme (Image Picker).
+- **AI Destekli İçerik Analizi** — GPT-4o-mini destekli prompt mühendisliği ile içerik sınıflandırması.
+- **Birim Fiyat Hesaplayıcı** — TL ve Gramaj/Litre verisini matematiksel oranlama.
 
-Fiyat geçmişi grafikleri.
+### ❌ Kapsam Dışı (v2.0 için)
 
-Barkod okutma (Sadece OCR odaklanılacak).
+- Kullanıcı Girişi (Auth) ve Bulut Senkronizasyonu
+- Kişiselleştirilmiş Alerji Profilleri (örn. gluten filtresi)
+- Fiyat geçmişi grafikleri
 
-6. Teknik Mimari ve Stack
+---
 
-Bileşen
+## 🛠️ Teknik Mimari
 
-Teknoloji / Paket
+| Bileşen | Teknoloji / Paket | Kullanım Amacı |
+|---------|-------------------|----------------|
+| **Frontend** | Flutter, Dart | Cross-platform mobil UI geliştirme |
+| **State Yönetimi** | Riverpod / Provider | Uygulama içi durum yönetimi |
+| **Medya** | `camera`, `image_picker` | Cihaz kamerasına erişim ve galeri seçimi |
+| **Lokal OCR** | `google_mlkit_text_recognition` | Görüntüyü cihazda metne çevirme (maliyet optimizasyonu) |
+| **AI / NLP** | OpenAI API (GPT-4o-mini) | Ham metni yapılandırılmış JSON'a çevirme ve risk analizi |
 
-Kullanım Amacı
+---
 
-Frontend
+## 🔄 Kullanıcı Akışı
 
-Flutter, Dart
+```
+1. 🚀 Açılış        → Splash screen sonrası kullanıcı doğrudan kamera vizörüne düşer.
+2. 🖼️ Kaynak Seçimi → Canlı kamera VEYA galeriden ekran görüntüsü yükleme.
+3. ⚙️ Mod Seçimi    → Alt bardan Fiyat veya İçerik modu seçilir.
+4. ⏳ Analiz        → "Analiz Et" butonuna basılır; Skeleton Loading animasyonu belirir.
+5. 🧠 İşlem         → ML Kit metni çeker → Metin, sistem promptuyla GPT API'ye gönderilir.
+6. 📊 Sonuç         → Ekranın altından Bottom Sheet yükselir.
+                       • İçerik: Renk kodlu kısa açıklamalar (örn. 🔴 E211 İçerir)
+                       • Fiyat:  Birim fiyat sonucu (örn. 1 kg: 125 TL)
+7. ✅ Kapanış       → Kullanıcı kartı aşağı kaydırır; sistem yeni taramaya hazırdır.
+```
 
-Cross-platform mobil UI geliştirme.
+---
 
-State Management
+## 🤖 AI Prompt Stratejisi
 
-Riverpod / Provider
+Sistemin hızlı çalışması için doğrudan görsel yerine yalnızca **metin** LLM'e gönderilir.
 
-Uygulama içi durum yönetimi (Kamera mı açık, galeri mi seçildi, mod ne?).
+### Örnek — İçerik Modu Promptu
 
-Medya & Kamera
+```text
+[SİSTEM PROMPTU]
+Sen uzman bir diyetisyen ve toksikologsun. Aşağıdaki ürün içeriğini analiz et.
+Zararlı (kırmızı), dikkat edilmesi gereken (sarı) ve güvenli (yeşil) maddeleri ayır.
+JSON formatında dön.
 
-camera, image_picker
+[KULLANICI VERİSİ — ML Kit çıktısı]
+İçindekiler: Su, Şeker, Glikoz şurubu, E211, Sitrik asit, Doğal aroma verici.
+```
 
-Cihaz kamerasına erişim ve galeriden medya seçimi.
+### Örnek — Beklenen JSON Çıktısı
 
-Lokal OCR
+```json
+{
+  "red": ["E211 (Sodyum Benzoat) — Koruyucu, alerjik reaksiyona yol açabilir"],
+  "yellow": ["Glikoz şurubu — Yüksek glisemik indeks"],
+  "green": ["Su", "Sitrik asit", "Doğal aroma verici"]
+}
+```
 
-google_mlkit_text_recognition
+> **Not:** Halüsinasyon riskini azaltmak için `temperature: 0.1` olarak ayarlanmalıdır.
 
-Görüntüdeki metni internete göndermeden önce cihazda hızlıca metne çevirme (Hız ve maliyet optimizasyonu).
+---
 
-AI / NLP
+## 📖 Kullanıcı Hikayeleri
 
-OpenAI API (GPT-4o-mini)
+| ID | Rol | İstek |
+|----|-----|-------|
+| **US01** | Market kullanıcısı | Uygulamayı açtığım an kameranın hazır olmasını istiyorum. |
+| **US02** | Online market kullanıcısı | Galerimden ekran görüntüsü yükleyebilmek istiyorum. |
+| **US03** | Bütçe yöneticisi | Farklı gramajlardaki ürünlerin 1 kg birim fiyatını görmek istiyorum. |
+| **US04** | Sağlığına dikkat eden birey | İçindekiler taramasında tehlikeli maddeler kırmızıyla vurgulanmalı. |
 
-OCR'dan gelen ham metni yapılandırılmış JSON'a çevirme ve sağlık risk analizini yapma.
+---
 
-7. Kullanıcı Akışı (User Flow)
+## ⚠️ Riskler ve Çözümler
 
-Uygulama Açılışı: Splash screen sonrası kullanıcı doğrudan ana ekrana (Kamera vizörüne) düşer.
+| Risk | Etki | Çözüm Stratejisi |
+|------|------|------------------|
+| **OCR Hataları** (örn. `8` → `0` okunması) | 🟠 Yüksek | Sonuç ekranına *"Yapay zeka tarafından okunmuştur, lütfen kontrol ediniz."* ibaresi eklemek. |
+| **LLM Halüsinasyonu** (yasal risk) | 🔴 Kritik | Uygulama içine *"Tıbbi tavsiye değildir"* ibaresi eklemek; `temperature: 0.1` kullanmak. |
+| **API Maliyetleri** | 🟡 Orta | GPT-4o-mini tercih etmek; ileriki versiyonlarda lokal önbellekleme (caching) uygulamak. |
 
-Görsel Kaynağı Seçimi:
+---
 
-Kullanıcı telefonu fiziksel ürüne tutar (Canlı Kamera).
-
-VEYA köşedeki "Galeri" ikonuna tıklayıp ekran görüntüsü seçer.
-
-Mod Seçimi: Alt bardan "Fiyat" veya "İçerik" modu seçilir.
-
-Tarama/Analiz: "Analiz Et" butonuna basılır. Ekranda Skeleton Loading (Yükleniyor) animasyonu belirir.
-
-İşlem (Arka Plan):
-
-Google ML Kit görseldeki metni (String) çeker.
-
-Çekilen metin, sistem promptu ile birlikte GPT API'sine gönderilir.
-
-Sonuç Gösterimi: Ekranın altından bir Bottom Sheet yükselir.
-
-İçerik Modu Sonucu: Madde listesi ve Kırmızı/Sarı/Yeşil renk kodlamalarıyla kısa açıklama.
-
-Fiyat Modu Sonucu: "1 Kg Fiyatı: 125 TL".
-
-Kapanış: Kullanıcı Bottom Sheet'i aşağı kaydırır ve yeni taramaya hazır hale gelir.
-
-8. Veri Modeli ve API Stratejisi (Data & API Strategy)
-
-Sistemin hızlı ve ucuz çalışması için doğrudan görseli API'ye göndermek yerine (Vision API), önce lokal OCR yapılıp sadece metin LLM'e gönderilecektir.
-
-Örnek GPT-4o-mini Prompt Yapısı (İçerik Modu İçin):
-
-// GİRDİ (Sistem Promptu)
-"Sen uzman bir diyetisyen ve toksikologsun. Aşağıdaki ürün içeriğini analiz et. Zararlı (kırmızı), dikkat edilmesi gereken (sarı) ve güvenli (yeşil) maddeleri ayır. JSON formatında dön."
-// GİRDİ (Kullanıcı Verisi - ML Kit'ten gelen)
-"İçindekiler: Su, Şeker, Glikoz şurubu, E211, Sitrik asit, Doğal aroma verici."
-
-
-9. Kullanıcı Hikayeleri (User Stories)
-
-US01: Bir kullanıcı olarak, markette zaman kaybetmemek için uygulamayı açtığım an kameranın hazır olmasını istiyorum.
-
-US02: Bir online market kullanıcısı olarak, uygulamaya galerimden bir ekran görüntüsü yükleyebilmek istiyorum ki, online alışverişlerimde de analiz yapabileyim.
-
-US03: Bir bütçe yöneticisi olarak, farklı gramajlardaki (örneğin 830 gr salça) ürünlerin etiketi üzerinden 1 kg'lık birim fiyatını görmek istiyorum.
-
-US04: Sağlığına dikkat eden bir birey olarak, ürünün içindekiler metnini tarattığımda içindeki tehlikeli maddelerin kırmızı ile vurgulanmasını istiyorum.
-
-10. Riskler, Kısıtlar ve Çözümler
-
-Risk / Kısıt
-
-Etki
-
-Çözüm (Mitigation)
-
-OCR Hataları: Kötü ışıkta veya düşük çözünürlüklü fotoğraflarda metnin yanlış okunması (Örn: 8 yerine 0 okunması).
-
-Yüksek
-
-Analiz sonucunda kullanıcılara ufak bir "Bu sonuçlar yapay zeka tarafından okunmuştur, lütfen manuel kontrol ediniz." ibaresi eklemek.
-
-LLM Halüsinasyonu: Yapay zekanın güvenli bir maddeye zararlı demesi (Yasal Risk).
-
-Kritik
-
-Uygulama içine "Tıbbi tavsiye değildir" (Disclaimer) maddesi eklemek ve LLM promptunun sıcaklığını (temperature: 0.1) düşük tutarak yaratıcılığı kısmak.
-
-API Maliyetleri: Her taramada OpenAI API'sine istek atmanın maliyet yaratması.
-
-Orta
-
-GPT-4o-mini kullanarak maliyetleri minimumda tutmak. (İleriki versiyonlarda lokal veritabanı önbelleklemesi - Caching eklenecek).
+> Bu doküman, çevik yazılım (Agile) prensiplerine göre hazırlanmıştır.
