@@ -1,8 +1,8 @@
-# 📅 SmartScan Geliştirme Planı (Supabase)
+# SmartScan Geliştirme Planı (Supabase)
 
 Bu dosya, SmartScan MVP sürümünün adım adım geliştirilme sürecini takip etmek ve LLM (Yapay Zeka) tabanlı kodlama asistanlarına (Cursor vb.) rehberlik etmek için hazırlanmıştır.
 
-## 📂 Dizin Yapısı
+## Dizin Yapısı
 
 Geliştirme süreci, kodların birbirine karışmaması için iki ayrı ana dizinde yürütülecektir:
 * `/frontend`: Mobil uygulama kodları (Flutter)
@@ -10,7 +10,7 @@ Geliştirme süreci, kodların birbirine karışmaması için iki ayrı ana dizi
 
 ---
 
-## 🚀 Faz 1: Altyapı ve Supabase Kurulumu
+## Faz 1: Altyapı ve Supabase Kurulumu
 
 - [ ] **1.1. Supabase Init:**
   - Supabase CLI ile projeyi başlat.
@@ -21,7 +21,7 @@ Geliştirme süreci, kodların birbirine karışmaması için iki ayrı ana dizi
 - [ ] **1.3. Edge Function Setup:**
   - `supabase functions new analyze-product` komutuyla ilk fonksiyonu oluştur.
 
-## 📱 Faz 2: Kamera ve OCR (Edge Intelligence)
+## Faz 2: Kamera ve OCR (Edge Intelligence)
 
 - [ ] **2.1. Kamera Vizörü:**
   - Tam ekran vizör ve mod seçici (Fiyat/İçerik) arayüzünü tasarla.
@@ -30,7 +30,7 @@ Geliştirme süreci, kodların birbirine karışmaması için iki ayrı ana dizi
 - [ ] **2.3. Galeri Desteği:**
   - `image_picker` paketini kullanarak galeriden seçilen fotoğrafın OCR sürecine sokulmasını sağla.
 
-## ☁️ Faz 3: Backend & AI Logic
+## Faz 3: Backend & AI Logic
 
 - [ ] **3.1. OpenAI Entegrasyonu:**
   - Edge Function içinde OpenAI API çağrısını yap.
@@ -38,7 +38,7 @@ Geliştirme süreci, kodların birbirine karışmaması için iki ayrı ana dizi
 - [ ] **3.2. API Güvenliği:**
   - OpenAI anahtarını Supabase Vault (Secrets) içinde güvenli bir şekilde sakla.
 
-## 📊 Faz 4: Sonuçlar ve Kayıt
+## Faz 4: Sonuçlar ve Kayıt
 
 - [ ] **4.1. UI Feedback:**
   - AI yanıtı beklerken skeleton loading gösterimi ekle.
@@ -47,4 +47,4 @@ Geliştirme süreci, kodların birbirine karışmaması için iki ayrı ana dizi
   - Başarılı taramaların PostgreSQL `scans` tablosuna otomatik kaydedilmesini sağla.
 
 ---
-**🤖 LLM (Cursor) Talimatı:** Lütfen projeyi geliştirirken bu plandaki adımları sırayla takip et. Kodlamaya `/supabase/functions` dizininden başla ve öncelikle Edge Function yapısını kur.
+**LLM (Cursor) Talimatı:** Lütfen projeyi geliştirirken bu plandaki adımları sırayla takip et. Kodlamaya `/supabase/functions` dizininden başla ve öncelikle Edge Function yapısını kur.
