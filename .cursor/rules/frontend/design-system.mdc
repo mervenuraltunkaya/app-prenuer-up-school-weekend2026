@@ -1,0 +1,22 @@
+---
+description: SmartScan tasarım sistemi zorunlu uygulama kuralı
+alwaysApply: true
+---
+
+# SmartScan Design System (Always Apply)
+
+Bu projede UI geliştirirken tek kaynak `/.cursor/rules/frontend/design-system.md` dosyasıdır. Yeni ekran, component veya stil değişikliklerinde aşağıdaki kurallar zorunludur:
+
+- Renk, tipografi, spacing, radius, elevation ve gradient değerlerini sadece design system token'larından kullan.
+- Hardcoded renk, ölçü, font boyutu veya rastgele padding/margin yazma; önce token/sabit ekle, sonra kullan.
+- Flutter tarafında tema ve sabitler üzerinden ilerle (`ThemeData`, `AppColors`, `AppSpacing`, `AppRadius`, metin stilleri).
+- Minimum dokunma alanı `48x48dp` altında interaktif eleman üretme.
+- Trafik ışığı sisteminde renk tek başına anlam taşımamalı; her zaman ikon + metin etiketi birlikte gösterilmeli.
+- Sonuç, uyarı ve AI bilgilendirme metinleri için design system'deki semantik renkleri ve kart yapısını kullan.
+- Kamera ve sonuç akışında Bottom Sheet, animasyon süresi ve geçiş davranışlarını design system'deki UX/motion kurallarıyla uyumlu tut.
+- Erişilebilirlikte kontrast, semanticLabel ve text scale uyumluluğunu koru.
+
+## Uygulama Notu
+
+- Bir tasarım kararı belirsizse önce `design-system.md` içindeki ilgili bölüm (renk, bileşen, motion, erişilebilirlik) esas alınır.
+- Çakışma durumunda bu kural ve `design-system.md`, genel frontend kurallarına göre önceliklidir.
