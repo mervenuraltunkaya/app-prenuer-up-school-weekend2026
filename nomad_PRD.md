@@ -1,4 +1,4 @@
-# PRD — Turistik Keşif & Kültürel Miras Koruma Uygulaması
+# PRD — Nomad
 
 **Versiyon:** 1.1  
 **Tarih:** Mayıs 2026  
@@ -216,43 +216,3 @@ bekliyor → incelendi → iletildi
 
 ---
 
-## 12. Cursor İçin `.cursorrules`
-
-```
-# Proje: Turistik Keşif & Kültürel Miras Koruma Uygulaması
-
-## Tech Stack
-- React Native + Expo (mobil)
-- Supabase (auth, veritabanı, storage)
-- Supabase Edge Functions (API proxy'ler)
-- Google Maps (react-native-maps)
-- Google Places API, Wikipedia REST API
-- Gemini 2.5 Flash API (vision, ücretsiz tier)
-
-## Kod Standartları
-- TypeScript kullan, tip güvenliği zorunlu
-- Async işlemlerde async/await kullan, callback yok
-- Her API response { success, data, error } formatında olsun
-- Supabase CRUD için direkt client SDK kullan (Edge Function değil)
-- API key'ler sadece Edge Functions içinde, client'a asla
-- Gemini API çağrıları sadece /reports/analyze Edge Function'ında
-- Türkçe yorum satırları yaz
-- Component'ları küçük parçalara böl, tek sorumluluk ilkesi
-- Expo Router ile navigasyon (file-based routing)
-
-## Veritabanı
-- Tüm tablolarda uuid primary key
-- Timestamp alanları created_at, updated_at
-- RLS (Row Level Security) aktif olmalı
-- Supabase client: @supabase/supabase-js
-
-## Klasör Yapısı (React Native)
-app/
-  (auth)/          (giriş, kayıt ekranları)
-  (tabs)/          (ana sekmeler: harita, rotalar, raporlar, profil)
-components/        (paylaşılan UI bileşenleri)
-services/          (supabase, gemini, places, wikipedia)
-hooks/             (custom hooks)
-types/             (TypeScript tipleri)
-constants/         (renkler, sabitler)
-```
