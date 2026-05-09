@@ -32,7 +32,7 @@ Riverpod-Specific Guidelines
 - Implement proper cancellation of asynchronous operations when widgets are disposed.
 
 Backend & Supabase Rules
-- All API calls to OpenAI MUST be done via Supabase Edge Functions, NEVER directly from the Flutter app.
+- All API calls to Gemini MUST be done via Supabase Edge Functions, NEVER directly from the Flutter app.
 - Use Supabase Flutter SDK for all database operations and Edge Function invocations.
 - Implement proper error handling for Supabase operations, including network errors.
 

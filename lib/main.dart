@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_scan/core/theme/app_theme.dart';
-import 'package:smart_scan/features/scanner/scanner_screen.dart';
+import 'package:smart_scan/features/scanner/presentation/scanner_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: SmartScanApp()));

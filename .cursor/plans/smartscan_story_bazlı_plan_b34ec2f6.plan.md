@@ -30,7 +30,7 @@ isProject: false
 - Flutter feature-first yapı kurulumu: `core`, `shared`, `features`.
 - Ortak servis katmanı:
   - OCR: `google_mlkit_text_recognition`
-  - LLM: OpenAI `gpt-4o-mini`, düşük temperature, JSON schema odaklı prompt
+  - LLM: Gemini, düşük temperature, JSON schema odaklı prompt
 - State yönetimi: Riverpod/Provider tabanlı `loading/success/error` akışı.
 - Sonuç sunumu: Kamera üstünde çalışan, alttan açılan Bottom Sheet.
 - Design system token zorunluluğu: renk/spacing/radius/typography değerleri sabitlerden tüketilir.

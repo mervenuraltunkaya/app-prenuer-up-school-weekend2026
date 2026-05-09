@@ -10,7 +10,7 @@ void main() {
       ),
     );
 
-    expect(find.text('Deal-Lens'), findsOneWidget);
-    expect(find.text('Pure-Scan'), findsOneWidget);
+    expect(find.text('Fiyat Analizi'), findsOneWidget);
+    expect(find.text('Icerik Analizi'), findsOneWidget);
   });
 }

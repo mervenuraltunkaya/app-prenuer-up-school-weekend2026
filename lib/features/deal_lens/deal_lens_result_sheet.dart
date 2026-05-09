@@ -24,14 +24,24 @@ class DealLensResultSheet extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Birim Fiyat', style: AppTextStyles.heading),
+            const Text('Birim Fiyat', style: AppTextStyles.heading),
             const SizedBox(height: AppSpacing.sm),
             Text(
               '${unitPrice.toStringAsFixed(2)} TL/$unitLabel',
               style: AppTextStyles.priceHero,
             ),
             const SizedBox(height: AppSpacing.sm),
-            Text('Ham OCR metni: $rawText', style: AppTextStyles.body),
+            Text(
+              'Ham OCR metni:',
+              style: AppTextStyles.body.copyWith(fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              rawText,
+              style: AppTextStyles.body,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+            ),
             const SizedBox(height: AppSpacing.md),
             Container(
               width: double.infinity,

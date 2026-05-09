@@ -34,15 +34,14 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    final controller = ref.read(scannerControllerProvider).cameraController;
-    if (controller == null || !controller.value.isInitialized) {
-      return;
-    }
-    if (state == AppLifecycleState.inactive) {
-      controller.dispose();
+    final scannerController = ref.read(scannerControllerProvider);
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
+      scannerController.onAppInactive();
     }
     if (state == AppLifecycleState.resumed) {
-      ref.read(scannerControllerProvider).initializeCamera();
+      scannerController.onAppResumed();
     }
   }
 
@@ -69,12 +68,23 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
               label: 'Galeri',
               child: _circleIconButton(
                 icon: Icons.photo_library,
-                onTap: () => ref
-                    .read(scannerControllerProvider)
-                    .pickImageFromGallery(),
+                onTap: state.isAnalyzing ? null : _onPickFromGalleryPressed,
               ),
             ),
           ),
+          if (state.selectedImageBytes != null)
+            Positioned(
+              top: 50,
+              right: 16,
+              child: Semantics(
+                button: true,
+                label: 'Secilen gorseli kaldir',
+                child: _circleIconButton(
+                  icon: Icons.close,
+                  onTap: () => ref.read(scannerControllerProvider).clearSelectedImage(),
+                ),
+              ),
+            ),
           Positioned(
             right: 20,
             bottom: 20,
@@ -113,7 +123,12 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
 
   Widget _buildBackground(ScannerController state) {
     if (state.selectedImageBytes != null) {
-      return Image.memory(state.selectedImageBytes!, fit: BoxFit.cover);
+      return ColoredBox(
+        color: Colors.black,
+        child: Center(
+          child: Image.memory(state.selectedImageBytes!, fit: BoxFit.contain),
+        ),
+      );
     }
     final CameraController? camera = state.cameraController;
     if (camera == null || !camera.value.isInitialized) {
@@ -206,7 +221,7 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
       width: 56,
       height: 56,
       child: Material(
-        color: Colors.black.withOpacity(0.35),
+        color: Colors.black.withValues(alpha: 0.35),
         shape: const CircleBorder(),
         child: InkWell(
           customBorder: const CircleBorder(),
@@ -250,5 +265,14 @@ class _ScannerScreenState extends ConsumerState<ScannerScreen>
         worst: result.worst,
       ),
     );
+  }
+
+  Future<void> _onPickFromGalleryPressed() async {
+    final controller = ref.read(scannerControllerProvider);
+    await controller.pickImageFromGallery();
+    if (!mounted) return;
+    final state = ref.read(scannerControllerProvider);
+    if (state.selectedImage == null || state.isAnalyzing) return;
+    await _onAnalyzePressed(state);
   }
 }

@@ -17,5 +17,13 @@ void main() {
       final result = parser.parse('Sadece fiyat 39 TL');
       expect(result, isNull);
     });
+
+    test('parses price with symbol and lt unit', () {
+      final result = parser.parse('Etiket: 84.50₺ 1,5 lt');
+      expect(result, isNotNull);
+      expect(result!.priceTry, 84.5);
+      expect(result.amount, 1.5);
+      expect(result.unit, 'l');
+    });
   });
 }

@@ -1,7 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:smart_scan/features/deal_lens/price_parser.dart';
 import 'package:smart_scan/features/deal_lens/unit_price_calculator.dart';
 import 'package:smart_scan/features/pure_scan/ingredient_analyzer.dart';
@@ -20,7 +19,7 @@ class ScannerController extends ChangeNotifier {
   final UnitPriceCalculator _calculator = UnitPriceCalculator();
   final IngredientAnalyzer _ingredientAnalyzer = IngredientAnalyzer();
   final LlmService _llmService = LlmService(
-    apiKey: const String.fromEnvironment('OPENAI_API_KEY'),
+    apiKey: const String.fromEnvironment('GEMINI_API_KEY'),
   );
 
   CameraController? cameraController;
@@ -30,35 +29,81 @@ class ScannerController extends ChangeNotifier {
   XFile? selectedImage;
   Uint8List? selectedImageBytes;
   ScanMode mode = ScanMode.dealLens;
+  bool _isAppForeground = true;
+  int _cameraSession = 0;
 
   Future<void> initializeCamera() async {
-    if (isInitializing) return;
+    if (isInitializing || !_isAppForeground) return;
+    final int session = ++_cameraSession;
     isInitializing = true;
     errorMessage = null;
     notifyListeners();
 
     try {
+      final previous = cameraController;
+      cameraController = null;
+      await previous?.dispose();
       final cameras = await availableCameras();
+      if (!_isAppForeground || session != _cameraSession) {
+        return;
+      }
       if (cameras.isEmpty) {
         throw Exception('No camera found.');
       }
-      cameraController = CameraController(
+      final controller = CameraController(
         cameras.first,
         ResolutionPreset.medium,
         enableAudio: false,
       );
-      await cameraController!.initialize();
+      await controller.initialize();
+
+      if (!_isAppForeground || session != _cameraSession) {
+        await controller.dispose();
+        return;
+      }
+
+      cameraController = controller;
     } catch (e) {
       errorMessage = 'Kamera baslatilamadi: $e';
     } finally {
-      isInitializing = false;
+      if (session == _cameraSession) {
+        isInitializing = false;
+      }
       notifyListeners();
     }
+  }
+
+  Future<void> onAppInactive() async {
+    _isAppForeground = false;
+    _cameraSession++;
+    try {
+      final controller = cameraController;
+      cameraController = null;
+      await controller?.dispose();
+      notifyListeners();
+    } catch (_) {
+      // Ignore lifecycle disposal errors.
+    }
+  }
+
+  Future<void> onAppResumed() async {
+    _isAppForeground = true;
+    if (selectedImage != null) {
+      // User is reviewing gallery image; camera restart is optional.
+      return;
+    }
+    await initializeCamera();
   }
 
   Future<void> pickImageFromGallery() async {
     selectedImage = await _imagePickerService.pickFromGallery();
     selectedImageBytes = await selectedImage?.readAsBytes();
+    notifyListeners();
+  }
+
+  void clearSelectedImage() {
+    selectedImage = null;
+    selectedImageBytes = null;
     notifyListeners();
   }
 
@@ -132,6 +177,8 @@ class ScannerController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _isAppForeground = false;
+    _cameraSession++;
     cameraController?.dispose();
     _ocrService.dispose();
     super.dispose();

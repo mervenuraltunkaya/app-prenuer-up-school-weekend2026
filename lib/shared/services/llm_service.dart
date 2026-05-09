@@ -14,31 +14,51 @@ class LlmService {
 
   Future<List<IngredientAnalysis>> analyzeIngredients(String text) async {
     if (apiKey.isEmpty) {
-      throw Exception('OPENAI_API_KEY is missing.');
+      throw Exception('GEMINI_API_KEY is missing.');
     }
 
-    final uri = Uri.parse('https://api.openai.com/v1/chat/completions');
+    final uri = Uri.parse(
+      'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=$apiKey',
+    );
+    final instruction = '''
+Analyze the ingredient list and classify each ingredient into one of:
+- danger
+- warning
+- safe
+
+Return ONLY valid JSON with this exact shape:
+{
+  "items": [
+    {
+      "name": "Ingredient name",
+      "reason": "Short reason in Turkish",
+      "status": "danger|warning|safe"
+    }
+  ]
+}
+''';
     final payload = {
-      'model': 'gpt-4o-mini',
-      'temperature': 0.1,
-      'response_format': {'type': 'json_object'},
-      'messages': [
+      'systemInstruction': {
+        'parts': [
+          {'text': instruction},
+        ],
+      },
+      'contents': [
         {
-          'role': 'system',
-          'content':
-              'Classify ingredient list into danger, warning, safe. Respond as JSON object with key items.',
-        },
-        {
-          'role': 'user',
-          'content': text,
+          'parts': [
+            {'text': text},
+          ],
         },
       ],
+      'generationConfig': {
+        'temperature': 0.1,
+        'responseMimeType': 'application/json',
+      },
     };
 
     final response = await _client.post(
       uri,
       headers: {
-        'Authorization': 'Bearer $apiKey',
         'Content-Type': 'application/json',
       },
       body: jsonEncode(payload),
@@ -49,8 +69,17 @@ class LlmService {
     }
 
     final data = jsonDecode(response.body) as Map<String, dynamic>;
-    final content =
-        data['choices'][0]['message']['content'] as String? ?? '{"items": []}';
+    final candidates = data['candidates'] as List<dynamic>? ?? <dynamic>[];
+    if (candidates.isEmpty) {
+      return <IngredientAnalysis>[];
+    }
+    final firstCandidate = candidates.first as Map<String, dynamic>;
+    final contentMap =
+        firstCandidate['content'] as Map<String, dynamic>? ??
+        <String, dynamic>{};
+    final parts = contentMap['parts'] as List<dynamic>? ?? <dynamic>[];
+    final firstPart = parts.isNotEmpty ? parts.first as Map<String, dynamic> : null;
+    final content = firstPart?['text'] as String? ?? '{"items": []}';
     final parsed = jsonDecode(content) as Map<String, dynamic>;
     final items = (parsed['items'] as List<dynamic>? ?? <dynamic>[]);
 

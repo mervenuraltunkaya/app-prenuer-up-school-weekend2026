@@ -75,7 +75,7 @@ Hem fiziksel markette **canlı kamera** ile hem de online marketten **ekran gör
 - **Modlu Tarama Ekranı** — Alt bardan yatay kaydırma ile *Fiyat* ve *İçerik* modları arasında geçiş.
 - **Canlı Kamera (Live OCR)** — Kamera vizöründen gerçek zamanlı veri okuma.
 - **Galeri Entegrasyonu** — Fotoğraf veya ekran görüntüsü yükleyip analiz etme (Image Picker).
-- **AI Destekli İçerik Analizi** — GPT-4o-mini destekli prompt mühendisliği ile içerik sınıflandırması.
+- **AI Destekli İçerik Analizi** — Gemini destekli prompt mühendisliği ile içerik sınıflandırması.
 - **Birim Fiyat Hesaplayıcı** — TL ve Gramaj/Litre verisini matematiksel oranlama.
 
 ### ❌ Kapsam Dışı (v2.0 için)
@@ -94,7 +94,7 @@ Hem fiziksel markette **canlı kamera** ile hem de online marketten **ekran gör
 | **State Yönetimi** | Riverpod / Provider | Uygulama içi durum yönetimi |
 | **Medya** | `camera`, `image_picker` | Cihaz kamerasına erişim ve galeri seçimi |
 | **Lokal OCR** | `google_mlkit_text_recognition` | Görüntüyü cihazda metne çevirme (maliyet optimizasyonu) |
-| **AI / NLP** | OpenAI API (GPT-4o-mini) | Ham metni yapılandırılmış JSON'a çevirme ve risk analizi |
+| **AI / NLP** | Gemini API | Ham metni yapılandırılmış JSON'a çevirme ve risk analizi |
 
 ---
 
@@ -105,7 +105,7 @@ Hem fiziksel markette **canlı kamera** ile hem de online marketten **ekran gör
 2. 🖼️ Kaynak Seçimi → Canlı kamera VEYA galeriden ekran görüntüsü yükleme.
 3. ⚙️ Mod Seçimi    → Alt bardan Fiyat veya İçerik modu seçilir.
 4. ⏳ Analiz        → "Analiz Et" butonuna basılır; Skeleton Loading animasyonu belirir.
-5. 🧠 İşlem         → ML Kit metni çeker → Metin, sistem promptuyla GPT API'ye gönderilir.
+5. 🧠 İşlem         → ML Kit metni çeker → Metin, sistem promptuyla Gemini API'ye gönderilir.
 6. 📊 Sonuç         → Ekranın altından Bottom Sheet yükselir.
                        • İçerik: Renk kodlu kısa açıklamalar (örn. 🔴 E211 İçerir)
                        • Fiyat:  Birim fiyat sonucu (örn. 1 kg: 125 TL)
@@ -131,7 +131,7 @@ Hem fiziksel markette **canlı kamera** ile hem de online marketten **ekran gör
 |------|------|------------------|
 | **OCR Hataları** (örn. `8` → `0` okunması) | 🟠 Yüksek | Sonuç ekranına *"Yapay zeka tarafından okunmuştur, lütfen kontrol ediniz."* ibaresi eklemek. |
 | **LLM Halüsinasyonu** (yasal risk) | 🔴 Kritik | Uygulama içine *"Tıbbi tavsiye değildir"* ibaresi eklemek; `temperature: 0.1` kullanmak. |
-| **API Maliyetleri** | 🟡 Orta | GPT-4o-mini tercih etmek; ileriki versiyonlarda lokal önbellekleme (caching) uygulamak. |
+| **API Maliyetleri** | 🟡 Orta | Gemini uygun maliyetli model tercih etmek; ileriki versiyonlarda lokal önbellekleme (caching) uygulamak. |
 
 ---
 
