@@ -1,5 +1,16 @@
 {
+  "name": "nomad",
+  "private": true,
+  "description": "Expo uygulaması frontend/ klasöründedir. Kökten: npm start. Veya: npx expo start ./frontend",
+  "scripts": {
+    "start": "npx expo start ./frontend",
+    "android": "npx expo start ./frontend --android",
+    "ios": "npx expo start ./frontend --ios",
+    "web": "npx expo start ./frontend --web"
+  },
   "devDependencies": {
-    "supabase": "^2.98.2"
+    "@types/react": "~19.2.10",
+    "supabase": "^2.98.2",
+    "typescript": "~5.9.2"
   }
 }
