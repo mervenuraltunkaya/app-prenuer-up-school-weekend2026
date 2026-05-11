@@ -1,118 +1,123 @@
-import { useRouter } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'expo-router'
+import { useCallback, useEffect, useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
   FlatList,
+  Platform,
   Pressable,
   StyleSheet,
   TextInput,
-} from 'react-native';
+} from 'react-native'
 
-import { Text, View } from '@/components/Themed';
-import { CATEGORY_LABELS } from '@/constants/categories';
-import { useRouteDraft } from '@/contexts/RouteDraftContext';
-import { fetchRouteDirections } from '@/lib/edge';
-import { supabase } from '@/lib/supabase';
+import { Text, View } from '@/components/Themed'
+import { CATEGORY_LABELS } from '@/constants/categories'
+import { useRouteDraft } from '@/contexts/RouteDraftContext'
+import { fetchRouteDirections } from '@/lib/edge'
+import { supabase } from '@/lib/supabase'
+import { colors } from '@/theme/colors'
+import { radius } from '@/theme/radius'
+import { spacing } from '@/theme/spacing'
+import { typography } from '@/theme/typography'
 
 type PlaceRow = {
-  id: string;
-  name: string;
-  category: string;
-  lat: number;
-  lng: number;
-};
+  id: string
+  name: string
+  category: string
+  lat: number
+  lng: number
+}
 
 export default function RouteBuilderScreen() {
-  const router = useRouter();
-  const { placeIds, removePlace, moveUp, moveDown, clear } = useRouteDraft();
-  const [places, setPlaces] = useState<PlaceRow[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [title, setTitle] = useState('');
-  const [dir, setDir] = useState<{ duration_text: string } | null>(null);
-  const [dirLoading, setDirLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
+  const router = useRouter()
+  const { placeIds, removePlace, moveUp, moveDown, clear } = useRouteDraft()
+  const [places, setPlaces] = useState<PlaceRow[]>([])
+  const [loading, setLoading] = useState(false)
+  const [title, setTitle] = useState('')
+  const [dir, setDir] = useState<{ duration_text: string } | null>(null)
+  const [dirLoading, setDirLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   const loadPlaces = useCallback(async () => {
     if (placeIds.length === 0) {
-      setPlaces([]);
-      return;
+      setPlaces([])
+      return
     }
-    setLoading(true);
-    const { data, error } = await supabase.from('places').select('*').in('id', placeIds);
+    setLoading(true)
+    const { data, error } = await supabase.from('places').select('*').in('id', placeIds)
     if (error || !data) {
-      setPlaces([]);
+      setPlaces([])
     } else {
-      const map = new Map(data.map((p) => [p.id, p as PlaceRow]));
-      const ordered = placeIds.map((id) => map.get(id)).filter(Boolean) as PlaceRow[];
-      setPlaces(ordered);
+      const map = new Map(data.map((p) => [p.id, p as PlaceRow]))
+      const ordered = placeIds.map((id) => map.get(id)).filter(Boolean) as PlaceRow[]
+      setPlaces(ordered)
     }
-    setLoading(false);
-  }, [placeIds]);
+    setLoading(false)
+  }, [placeIds])
 
   useEffect(() => {
-    loadPlaces();
-  }, [loadPlaces]);
+    loadPlaces()
+  }, [loadPlaces])
 
   async function refreshDirections() {
     if (places.length < 2) {
-      setDir(null);
-      return;
+      setDir(null)
+      return
     }
-    setDirLoading(true);
+    setDirLoading(true)
     try {
-      const pts = places.map((p) => ({ lat: p.lat, lng: p.lng }));
-      const d = await fetchRouteDirections(pts);
-      setDir(d);
+      const pts = places.map((p) => ({ lat: p.lat, lng: p.lng }))
+      const d = await fetchRouteDirections(pts)
+      setDir(d)
     } catch (e) {
-      Alert.alert('Yön tarifi', e instanceof Error ? e.message : 'Hata');
-      setDir(null);
+      Alert.alert('Yön tarifi', e instanceof Error ? e.message : 'Hata')
+      setDir(null)
     } finally {
-      setDirLoading(false);
+      setDirLoading(false)
     }
   }
 
   useEffect(() => {
     if (places.length < 2) {
-      setDir(null);
-      return;
+      setDir(null)
+      return
     }
-    let cancelled = false;
-    (async () => {
-      setDirLoading(true);
+    let cancelled = false
+    ;(async () => {
+      setDirLoading(true)
       try {
-        const pts = places.map((p) => ({ lat: p.lat, lng: p.lng }));
-        const d = await fetchRouteDirections(pts);
-        if (!cancelled) setDir(d);
+        const pts = places.map((p) => ({ lat: p.lat, lng: p.lng }))
+        const d = await fetchRouteDirections(pts)
+        if (!cancelled) setDir(d)
       } catch {
-        if (!cancelled) setDir(null);
+        if (!cancelled) setDir(null)
       } finally {
-        if (!cancelled) setDirLoading(false);
+        if (!cancelled) setDirLoading(false)
       }
-    })();
+    })()
     return () => {
-      cancelled = true;
-    };
-  }, [places]);
+      cancelled = true
+    }
+  }, [places])
 
   async function saveRoute() {
-    const t = title.trim();
+    const t = title.trim()
     if (t.length < 2) {
-      Alert.alert('Başlık', 'Rota için en az 2 karakterlik bir ad girin.');
-      return;
+      Alert.alert('Başlık', 'Rota için en az 2 karakterlik bir ad girin.')
+      return
     }
     if (placeIds.length === 0) {
-      Alert.alert('Rota boş', 'Önce mekan ekleyin.');
-      return;
+      Alert.alert('Rota boş', 'Önce mekan ekleyin.')
+      return
     }
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
     if (!user) {
-      Alert.alert('Oturum', 'Giriş yapmalısınız.');
-      return;
+      Alert.alert('Oturum', 'Giriş yapmalısınız.')
+      return
     }
-    setSaving(true);
+    setSaving(true)
     const { data: routeRow, error: rErr } = await supabase
       .from('routes')
       .insert({
@@ -122,39 +127,39 @@ export default function RouteBuilderScreen() {
         is_public: false,
       })
       .select('id')
-      .single();
+      .single()
 
     if (rErr || !routeRow) {
-      setSaving(false);
-      Alert.alert('Kayıt hatası', rErr?.message ?? 'Rota kaydedilemedi');
-      return;
+      setSaving(false)
+      Alert.alert('Kayıt hatası', rErr?.message ?? 'Rota kaydedilemedi')
+      return
     }
 
     const rows = placeIds.map((placeId, index) => ({
       route_id: routeRow.id,
       place_id: placeId,
       order_index: index,
-    }));
+    }))
 
-    const { error: rpErr } = await supabase.from('route_places').insert(rows);
-    setSaving(false);
+    const { error: rpErr } = await supabase.from('route_places').insert(rows)
+    setSaving(false)
     if (rpErr) {
-      Alert.alert('Kayıt hatası', rpErr.message);
-      return;
+      Alert.alert('Kayıt hatası', rpErr.message)
+      return
     }
-    clear();
-    setTitle('');
+    clear()
+    setTitle('')
     Alert.alert('Kaydedildi', 'Rota oluşturuldu.', [
       { text: 'Tamam', onPress: () => router.replace('/routes') },
-    ]);
+    ])
   }
 
   if (loading && placeIds.length > 0) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={colors.crimson} />
       </View>
-    );
+    )
   }
 
   return (
@@ -163,6 +168,7 @@ export default function RouteBuilderScreen() {
       <TextInput
         style={styles.input}
         placeholder="Örn. İstanbul tarihi tur"
+        placeholderTextColor={colors.brown}
         value={title}
         onChangeText={setTitle}
       />
@@ -172,8 +178,10 @@ export default function RouteBuilderScreen() {
       ) : dir ? (
         <Text style={styles.meta}>Tahmini süre (araç): {dir.duration_text}</Text>
       ) : places.length >= 2 ? (
-        <Pressable onPress={refreshDirections}>
-          <Text style={styles.link}>Süreyi yeniden hesapla</Text>
+        <Pressable accessibilityRole="button" onPress={refreshDirections}>
+          <Text lightColor={colors.crimson} darkColor={colors.crimsonLight} style={styles.link}>
+            Süreyi yeniden hesapla
+          </Text>
         </Pressable>
       ) : (
         <Text style={styles.meta}>En az iki durak için süre gösterilir.</Text>
@@ -188,17 +196,19 @@ export default function RouteBuilderScreen() {
         renderItem={({ item, index }) => (
           <View style={styles.row}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.placeName}>{item.name}</Text>
+              <Text style={styles.placeName} lightColor={colors.ink} darkColor={colors.cream}>
+                {item.name}
+              </Text>
               <Text style={styles.placeMeta}>{CATEGORY_LABELS[item.category] ?? item.category}</Text>
             </View>
             <View style={styles.rowBtns}>
-              <Pressable style={styles.smallBtn} onPress={() => moveUp(index)}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Yukarı taşı" style={styles.smallBtn} onPress={() => moveUp(index)}>
                 <Text>↑</Text>
               </Pressable>
-              <Pressable style={styles.smallBtn} onPress={() => moveDown(index)}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Aşağı taşı" style={styles.smallBtn} onPress={() => moveDown(index)}>
                 <Text>↓</Text>
               </Pressable>
-              <Pressable style={styles.smallBtn} onPress={() => removePlace(item.id)}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Durağı kaldır" style={styles.smallBtn} onPress={() => removePlace(item.id)}>
                 <Text>✕</Text>
               </Pressable>
             </View>
@@ -207,55 +217,67 @@ export default function RouteBuilderScreen() {
       />
 
       <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Rotayı kaydet"
         style={[styles.saveBtn, saving && styles.saveBtnDisabled]}
         onPress={saveRoute}
         disabled={saving}>
-        <Text style={styles.saveText}>{saving ? 'Kaydediliyor…' : 'Rotayı kaydet'}</Text>
+        <Text lightColor={colors.white} darkColor={colors.white} style={styles.saveText}>
+          {saving ? 'Kaydediliyor…' : 'Rotayı kaydet'}
+        </Text>
       </Pressable>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
+  container: { flex: 1, padding: spacing.base },
   list: { flex: 1 },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
-  label: { fontWeight: '600', marginBottom: 6 },
+  label: { ...typography.label, marginBottom: 6 },
   input: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 12,
-    fontSize: 16,
+    height: 48,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
+    marginBottom: spacing.md,
+    ...typography.body,
+    color: colors.ink,
+    backgroundColor: colors.surface,
   },
-  meta: { opacity: 0.7, marginBottom: 8 },
-  section: { fontWeight: '700', marginVertical: 8 },
+  meta: { ...typography.body, marginBottom: spacing.sm },
+  section: { ...typography.h3, marginVertical: spacing.sm },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 10,
-    borderBottomWidth: StyleSheet.hairlineWidth,
-    gap: 8,
+    borderBottomWidth: 0.5,
+    borderBottomColor: colors.border,
+    gap: spacing.sm,
   },
-  placeName: { fontSize: 16, fontWeight: '600' },
-  placeMeta: { opacity: 0.65, fontSize: 13 },
+  placeName: { ...typography.h3, fontSize: 16 },
+  placeMeta: { ...typography.caption, marginTop: 2 },
   rowBtns: { flexDirection: 'row', gap: 6 },
   smallBtn: {
     paddingHorizontal: 10,
     paddingVertical: 6,
-    borderRadius: 8,
-    borderWidth: StyleSheet.hairlineWidth,
+    borderRadius: radius.sm,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    backgroundColor: colors.cream,
   },
-  empty: { opacity: 0.7, paddingVertical: 24 },
+  empty: { ...typography.body, paddingVertical: spacing.lg },
   saveBtn: {
     marginTop: 'auto',
-    backgroundColor: '#2f95dc',
-    paddingVertical: 14,
-    borderRadius: 10,
+    height: 48,
+    backgroundColor: colors.crimson,
+    borderRadius: radius.full,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   saveBtnDisabled: { opacity: 0.6 },
-  saveText: { color: '#fff', fontWeight: '700' },
-  link: { color: '#2f95dc', marginBottom: 8 },
-});
+  saveText: { ...typography.h3, color: colors.white },
+  link: { ...typography.h3, marginBottom: spacing.sm },
+})

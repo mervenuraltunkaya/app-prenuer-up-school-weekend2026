@@ -1,5 +1,5 @@
-import { Link, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { Link, useRouter } from 'expo-router'
+import { useState } from 'react'
 import {
   ActivityIndicator,
   Alert,
@@ -8,38 +8,42 @@ import {
   Pressable,
   StyleSheet,
   TextInput,
-} from 'react-native';
+} from 'react-native'
 
-import { Text, View } from '@/components/Themed';
-import { useAuth } from '@/contexts/AuthContext';
-import { getSupabaseConfigError } from '@/lib/supabase';
+import { Text, View } from '@/components/Themed'
+import { useAuth } from '@/contexts/AuthContext'
+import { getSupabaseConfigError } from '@/lib/supabase'
+import { colors } from '@/theme/colors'
+import { radius } from '@/theme/radius'
+import { spacing } from '@/theme/spacing'
+import { typography } from '@/theme/typography'
 
 export default function LoginScreen() {
-  const router = useRouter();
-  const { signIn } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+  const router = useRouter()
+  const { signIn } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const cfgErr = getSupabaseConfigError();
+  const cfgErr = getSupabaseConfigError()
 
   async function onSubmit() {
     if (cfgErr) {
-      Alert.alert('Yapılandırma', cfgErr);
-      return;
+      Alert.alert('Yapılandırma', cfgErr)
+      return
     }
     if (!email.trim() || !password) {
-      Alert.alert('Eksik bilgi', 'E-posta ve şifre girin.');
-      return;
+      Alert.alert('Eksik bilgi', 'E-posta ve şifre girin.')
+      return
     }
-    setLoading(true);
-    const { error } = await signIn(email, password);
-    setLoading(false);
+    setLoading(true)
+    const { error } = await signIn(email, password)
+    setLoading(false)
     if (error) {
-      Alert.alert('Giriş başarısız', error.message);
-      return;
+      Alert.alert('Giriş başarısız', error.message)
+      return
     }
-    router.replace('/');
+    router.replace('/')
   }
 
   return (
@@ -53,6 +57,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="E-posta"
+          placeholderTextColor={colors.brown}
           autoCapitalize="none"
           keyboardType="email-address"
           autoCorrect={false}
@@ -62,53 +67,79 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Şifre"
+          placeholderTextColor={colors.brown}
           secureTextEntry
           value={password}
           onChangeText={setPassword}
         />
 
-        <Pressable style={styles.button} onPress={onSubmit} disabled={loading}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="Giriş yap"
+          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+          onPress={onSubmit}
+          disabled={loading}>
           {loading ? (
-            <ActivityIndicator color="#fff" />
+            <ActivityIndicator color={colors.white} />
           ) : (
-            <Text style={styles.buttonText}>Giriş yap</Text>
+            <Text lightColor={colors.white} darkColor={colors.white} style={styles.buttonText}>
+              Giriş yap
+            </Text>
           )}
         </Pressable>
 
         <Link href="/register" asChild>
-          <Pressable>
-            <Text style={styles.link}>Hesabın yok mu? Kayıt ol</Text>
+          <Pressable accessibilityRole="button" accessibilityLabel="Kayıt ol">
+            <Text lightColor={colors.crimson} darkColor={colors.crimsonLight} style={styles.link}>
+              Hesabın yok mu? Kayıt ol
+            </Text>
           </Pressable>
         </Link>
       </View>
     </KeyboardAvoidingView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  flex: { flex: 1 },
+  flex: { flex: 1, backgroundColor: colors.surface },
   container: {
     flex: 1,
-    padding: 24,
+    padding: spacing.lg,
     justifyContent: 'center',
-    gap: 12,
+    gap: spacing.md,
   },
-  title: { fontSize: 24, fontWeight: '700' },
-  sub: { opacity: 0.7, marginBottom: 8 },
+  title: {
+    ...typography.h1,
+    marginBottom: spacing.xs,
+  },
+  sub: { ...typography.body, marginBottom: spacing.sm },
   input: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 10,
-    paddingHorizontal: 14,
+    height: 48,
+    backgroundColor: colors.surface,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.base,
     paddingVertical: Platform.OS === 'ios' ? 14 : 10,
-    fontSize: 16,
+    ...typography.body,
+    color: colors.ink,
   },
   button: {
-    backgroundColor: '#2f95dc',
-    paddingVertical: 14,
-    borderRadius: 10,
+    height: 48,
+    backgroundColor: colors.crimson,
+    borderRadius: radius.full,
     alignItems: 'center',
-    marginTop: 8,
+    justifyContent: 'center',
+    marginTop: spacing.sm,
   },
-  buttonText: { color: '#fff', fontWeight: '600', fontSize: 16 },
-  link: { color: '#2f95dc', textAlign: 'center', marginTop: 16 },
-});
+  buttonPressed: { backgroundColor: colors.crimsonDark },
+  buttonText: {
+    ...typography.h3,
+    color: colors.white,
+  },
+  link: {
+    ...typography.h3,
+    textAlign: 'center',
+    marginTop: spacing.base,
+  },
+})
