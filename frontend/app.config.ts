@@ -21,6 +21,7 @@ const config: ExpoConfig = {
     },
   },
   android: {
+    package: "com.example.nomad",
     adaptiveIcon: {
       foregroundImage: './assets/images/adaptive-icon.png',
       backgroundColor: '#ffffff',
