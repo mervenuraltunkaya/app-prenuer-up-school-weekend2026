@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import FontAwesome from '@expo/vector-icons/FontAwesome'
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import { Link, useRouter } from 'expo-router'
 import { useState } from 'react'
 import {
@@ -7,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Pressable,
+<<<<<<< HEAD
   ScrollView,
   StyleSheet,
   Text,
@@ -15,11 +19,19 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+=======
+  StyleSheet,
+  TextInput,
+} from 'react-native'
+
+import { Text, View } from '@/components/Themed'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import { useAuth } from '@/contexts/AuthContext'
 import { getSupabaseConfigError } from '@/lib/supabase'
 import { colors } from '@/theme/colors'
 import { radius } from '@/theme/radius'
 import { spacing } from '@/theme/spacing'
+<<<<<<< HEAD
 import { fontFamilies, typography } from '@/theme/typography'
 
 export default function LoginScreen() {
@@ -29,6 +41,15 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+=======
+import { typography } from '@/theme/typography'
+
+export default function LoginScreen() {
+  const router = useRouter()
+  const { signIn } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   const [loading, setLoading] = useState(false)
 
   const cfgErr = getSupabaseConfigError()
@@ -54,6 +75,7 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
+<<<<<<< HEAD
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
@@ -113,16 +135,47 @@ export default function LoginScreen() {
         <Pressable accessibilityRole="button" style={styles.forgotWrap}>
           <Text style={styles.forgot}>Şifremi unuttum</Text>
         </Pressable>
+=======
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+      style={styles.flex}>
+      <View style={styles.container}>
+        <Text style={styles.title}>Tekrar hoş geldin</Text>
+        <Text style={styles.sub}>E-posta ve şifrenle giriş yap.</Text>
+
+        <TextInput
+          style={styles.input}
+          placeholder="E-posta"
+          placeholderTextColor={colors.brown}
+          autoCapitalize="none"
+          keyboardType="email-address"
+          autoCorrect={false}
+          value={email}
+          onChangeText={setEmail}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Şifre"
+          placeholderTextColor={colors.brown}
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
         <Pressable
           accessibilityRole="button"
           accessibilityLabel="Giriş yap"
+<<<<<<< HEAD
           style={({ pressed }) => [styles.primary, pressed && styles.primaryPressed]}
+=======
+          style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
           onPress={onSubmit}
           disabled={loading}>
           {loading ? (
             <ActivityIndicator color={colors.white} />
           ) : (
+<<<<<<< HEAD
             <Text style={styles.primaryText}>Giriş yap</Text>
           )}
         </Pressable>
@@ -151,12 +204,29 @@ export default function LoginScreen() {
           </Pressable>
         </Link>
       </ScrollView>
+=======
+            <Text lightColor={colors.white} darkColor={colors.white} style={styles.buttonText}>
+              Giriş yap
+            </Text>
+          )}
+        </Pressable>
+
+        <Link href="/register" asChild>
+          <Pressable accessibilityRole="button" accessibilityLabel="Kayıt ol">
+            <Text lightColor={colors.crimson} darkColor={colors.crimsonLight} style={styles.link}>
+              Hesabın yok mu? Kayıt ol
+            </Text>
+          </Pressable>
+        </Link>
+      </View>
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     </KeyboardAvoidingView>
   )
 }
 
 const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: colors.surface },
+<<<<<<< HEAD
   scroll: {
     paddingHorizontal: spacing.lg,
     flexGrow: 1,
@@ -230,10 +300,37 @@ const styles = StyleSheet.create({
   },
   primary: {
     height: 52,
+=======
+  container: {
+    flex: 1,
+    padding: spacing.lg,
+    justifyContent: 'center',
+    gap: spacing.md,
+  },
+  title: {
+    ...typography.h1,
+    marginBottom: spacing.xs,
+  },
+  sub: { ...typography.body, marginBottom: spacing.sm },
+  input: {
+    height: 48,
+    backgroundColor: colors.surface,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.base,
+    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
+    ...typography.body,
+    color: colors.ink,
+  },
+  button: {
+    height: 48,
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     backgroundColor: colors.crimson,
     borderRadius: radius.full,
     alignItems: 'center',
     justifyContent: 'center',
+<<<<<<< HEAD
   },
   primaryPressed: {
     backgroundColor: colors.crimsonDark,
@@ -293,5 +390,18 @@ const styles = StyleSheet.create({
     ...typography.h3,
     color: colors.crimson,
     textDecorationLine: 'underline',
+=======
+    marginTop: spacing.sm,
+  },
+  buttonPressed: { backgroundColor: colors.crimsonDark },
+  buttonText: {
+    ...typography.h3,
+    color: colors.white,
+  },
+  link: {
+    ...typography.h3,
+    textAlign: 'center',
+    marginTop: spacing.base,
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   },
 })

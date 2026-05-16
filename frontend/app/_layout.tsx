@@ -15,8 +15,11 @@ import * as SplashScreen from 'expo-splash-screen'
 import { useEffect } from 'react'
 import 'react-native-reanimated'
 
+<<<<<<< HEAD
 import '@/lib/i18n'
 
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import { useColorScheme } from '@/components/useColorScheme'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { CityProvider } from '@/contexts/CityContext'

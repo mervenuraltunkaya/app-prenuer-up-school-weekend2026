@@ -39,7 +39,11 @@ const config: ExpoConfig = {
     output: 'static',
     favicon: './assets/images/favicon.png',
   },
+<<<<<<< HEAD
   plugins: ['expo-router', 'expo-localization'],
+=======
+  plugins: ['expo-router'],
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   experiments: {
     typedRoutes: true,
   },

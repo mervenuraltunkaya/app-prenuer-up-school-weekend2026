@@ -15,8 +15,12 @@ export default function AuthLayout() {
         headerShadowVisible: false,
         contentStyle: { backgroundColor: colors.surface },
       }}>
+<<<<<<< HEAD
       <Stack.Screen name="onboarding" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ headerShown: false }} />
+=======
+      <Stack.Screen name="login" options={{ title: 'Giriş' }} />
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
       <Stack.Screen name="register" options={{ title: 'Kayıt' }} />
     </Stack>
   )

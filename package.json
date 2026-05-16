@@ -1,7 +1,11 @@
 {
   "name": "nomad",
   "private": true,
+<<<<<<< HEAD
   "description": "Nomad — frontend/ (Expo), backend/ (Supabase), prodocs/ (dokümantasyon)",
+=======
+  "description": "Expo uygulaması frontend/ klasöründedir. Kökten: npm start. Veya: npx expo start ./frontend",
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   "scripts": {
     "start": "npx expo start ./frontend",
     "android": "npx expo start ./frontend --android",

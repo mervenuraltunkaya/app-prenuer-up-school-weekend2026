@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useFocusEffect } from 'expo-router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -19,6 +20,19 @@ import { colors, semantic } from '@/theme/colors'
 import { radius } from '@/theme/radius'
 import { spacing } from '@/theme/spacing'
 import { fontFamilies, typography } from '@/theme/typography'
+=======
+import { useFocusEffect, useRouter } from 'expo-router'
+import { useCallback, useEffect, useState } from 'react'
+import { ActivityIndicator, FlatList, Image, Pressable, StyleSheet, View as RNView } from 'react-native'
+
+import { Text, View } from '@/components/Themed'
+import { CATEGORY_LABELS } from '@/constants/categories'
+import { supabase } from '@/lib/supabase'
+import { colors, semantic } from '@/theme/colors'
+import { radius } from '@/theme/radius'
+import { spacing } from '@/theme/spacing'
+import { typography } from '@/theme/typography'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
 type ReportRow = {
   id: string
@@ -31,6 +45,7 @@ type ReportRow = {
   photo_url: string
 }
 
+<<<<<<< HEAD
 type FilterKey = 'all' | 'bekliyor' | 'iletildi'
 
 const SEVERITY_LABEL: Record<string, string> = {
@@ -43,6 +58,18 @@ const STATUS_LABEL: Record<string, string> = {
   bekliyor: 'BEKLİYOR',
   incelendi: 'İNCELENDİ',
   iletildi: 'İLETİLDİ',
+=======
+const SEVERITY_LABEL: Record<string, string> = {
+  kritik: 'Kritik',
+  orta: 'Orta',
+  hafif: 'Hafif',
+}
+
+const STATUS_LABEL: Record<string, string> = {
+  bekliyor: 'Bekliyor',
+  incelendi: 'İncelendi',
+  iletildi: 'İletildi',
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 }
 
 function severityColors(sev: string | null) {
@@ -53,6 +80,7 @@ function severityColors(sev: string | null) {
 }
 
 function statusColors(st: string) {
+<<<<<<< HEAD
   if (st === 'iletildi' || st === 'incelendi') return { bg: semantic.lowBg, text: semantic.lowText }
   return { bg: semantic.criticalBg, text: semantic.criticalText }
 }
@@ -64,6 +92,19 @@ export default function ReportsTabScreen() {
   >([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<FilterKey>('all')
+=======
+  if (st === 'iletildi') return { bg: semantic.lowBg, text: semantic.lowText }
+  if (st === 'bekliyor') return { bg: semantic.statusPendingBg, text: semantic.statusPendingText }
+  return { bg: colors.cream, text: colors.inkMuted }
+}
+
+export default function ReportsTabScreen() {
+  const router = useRouter()
+  const [items, setItems] = useState<
+    (ReportRow & { place_name: string; place_category: string })[]
+  >([])
+  const [loading, setLoading] = useState(true)
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -77,6 +118,7 @@ export default function ReportsTabScreen() {
       return
     }
     const ids = [...new Set(reports.map((r) => r.place_id))]
+<<<<<<< HEAD
     const { data: places } = await supabase.from('places').select('id, name').in('id', ids)
     const pmap = new Map((places ?? []).map((p) => [p.id, p]))
     setItems(
@@ -84,6 +126,22 @@ export default function ReportsTabScreen() {
         ...r,
         place_name: pmap.get(r.place_id)?.name ?? 'Mekan',
       })),
+=======
+    const { data: places, error: pErr } = await supabase
+      .from('places')
+      .select('id, name, category')
+      .in('id', ids)
+    const pmap = new Map((places ?? []).map((p) => [p.id, p]))
+    setItems(
+      (reports as ReportRow[]).map((r) => {
+        const p = pmap.get(r.place_id)
+        return {
+          ...r,
+          place_name: p?.name ?? 'Mekan',
+          place_category: p?.category ?? '',
+        }
+      }),
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     )
     setLoading(false)
   }, [])
@@ -94,6 +152,7 @@ export default function ReportsTabScreen() {
     }, [load]),
   )
 
+<<<<<<< HEAD
   const filtered = useMemo(() => {
     if (filter === 'all') return items
     if (filter === 'bekliyor') return items.filter((i) => i.status === 'bekliyor')
@@ -135,6 +194,28 @@ export default function ReportsTabScreen() {
         ListEmptyComponent={
           loading ? (
             <ActivityIndicator style={{ marginTop: spacing.xl }} color={colors.crimson} />
+=======
+  return (
+    <View style={styles.container}>
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Yeni hasar raporu"
+        style={({ pressed }) => [styles.newBtn, pressed && styles.newBtnPressed]}
+        onPress={() => router.push('/report/new')}>
+        <Text lightColor={colors.white} darkColor={colors.white} style={styles.newBtnText}>
+          Yeni rapor
+        </Text>
+      </Pressable>
+      <FlatList
+        data={items}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: spacing.lg }}
+        refreshing={loading}
+        onRefresh={() => void load()}
+        ListEmptyComponent={
+          loading ? (
+            <ActivityIndicator style={{ marginTop: spacing.lg }} color={colors.crimson} />
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
           ) : (
             <Text style={styles.empty}>Henüz rapor yok.</Text>
           )
@@ -145,6 +226,7 @@ export default function ReportsTabScreen() {
   )
 }
 
+<<<<<<< HEAD
 function ReportCard({ row }: { row: ReportRow & { place_name: string } }) {
   const [uri, setUri] = useState<string | null>(null)
   const sev = severityColors(row.severity)
@@ -153,6 +235,16 @@ function ReportCard({ row }: { row: ReportRow & { place_name: string } }) {
     row.description?.trim().split('\n')[0]?.slice(0, 48) ||
     row.ai_analysis?.trim().slice(0, 48) ||
     'Hasar raporu'
+=======
+function ReportCard({
+  row,
+}: {
+  row: ReportRow & { place_name: string; place_category: string }
+}) {
+  const [uri, setUri] = useState<string | null>(null)
+  const sev = severityColors(row.severity)
+  const st = statusColors(row.status)
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
   useEffect(() => {
     let cancelled = false
@@ -168,6 +260,7 @@ function ReportCard({ row }: { row: ReportRow & { place_name: string } }) {
   }, [row.photo_url])
 
   return (
+<<<<<<< HEAD
     <View style={styles.card}>
       <View style={styles.cardTop}>
         {uri ? (
@@ -205,10 +298,44 @@ function ReportCard({ row }: { row: ReportRow & { place_name: string } }) {
         </Pressable>
       </View>
     </View>
+=======
+    <RNView style={styles.card}>
+      {uri ? (
+        <Image source={{ uri }} style={styles.thumb} />
+      ) : (
+        <RNView style={[styles.thumb, styles.thumbPlaceholder]} />
+      )}
+      <View style={{ flex: 1, gap: spacing.xs }}>
+        <Text style={styles.placeName} lightColor={colors.ink} darkColor={colors.cream}>
+          {row.place_name}
+        </Text>
+        <Text style={styles.cat}>{CATEGORY_LABELS[row.place_category] ?? row.place_category}</Text>
+        <RNView style={styles.badgeRow}>
+          <RNView style={[styles.badge, { backgroundColor: st.bg }]}>
+            <Text style={[styles.badgeText, { color: st.text }]}>{STATUS_LABEL[row.status] ?? row.status}</Text>
+          </RNView>
+          {row.severity ? (
+            <RNView style={[styles.badge, { backgroundColor: sev.bg }]}>
+              <Text style={[styles.badgeText, { color: sev.text }]}>
+                {SEVERITY_LABEL[row.severity] ?? row.severity}
+              </Text>
+            </RNView>
+          ) : null}
+        </RNView>
+        {row.ai_analysis ? (
+          <Text style={styles.analysis} numberOfLines={4}>
+            AI: {row.ai_analysis}
+          </Text>
+        ) : null}
+        <Text style={styles.date}>{new Date(row.created_at).toLocaleString()}</Text>
+      </View>
+    </RNView>
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   )
 }
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   root: {
     flex: 1,
     backgroundColor: colors.surface,
@@ -325,4 +452,41 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.crimson,
   },
+=======
+  container: { flex: 1, padding: spacing.base },
+  newBtn: {
+    alignSelf: 'flex-start',
+    backgroundColor: colors.crimson,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: radius.full,
+    marginBottom: spacing.md,
+  },
+  newBtnPressed: { backgroundColor: colors.crimsonDark },
+  newBtnText: { ...typography.h3, color: colors.white },
+  card: {
+    flexDirection: 'row',
+    gap: spacing.md,
+    padding: spacing.md,
+    borderRadius: radius.md,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    marginBottom: spacing.md,
+    backgroundColor: colors.cream,
+  },
+  thumb: { width: 88, height: 88, borderRadius: radius.sm },
+  thumbPlaceholder: { backgroundColor: colors.surface },
+  placeName: { ...typography.h3, fontSize: 16 },
+  cat: { ...typography.caption },
+  badgeRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  badge: {
+    paddingVertical: 4,
+    paddingHorizontal: 10,
+    borderRadius: radius.full,
+  },
+  badgeText: { ...typography.caption, fontFamily: typography.h3.fontFamily },
+  analysis: { ...typography.body, marginTop: spacing.xs },
+  date: { ...typography.caption, marginTop: spacing.xs },
+  empty: { ...typography.body, textAlign: 'center', marginTop: spacing.lg },
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 })

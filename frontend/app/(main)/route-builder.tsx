@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useMemo, useState } from 'react'
@@ -18,11 +19,33 @@ import { CATEGORY_LABELS } from '@/constants/categories'
 import { useRouteDraft } from '@/contexts/RouteDraftContext'
 import { fetchRouteDirections } from '@/lib/edge'
 import { formatKm, haversineKm } from '@/lib/geo'
+=======
+import { useRouter } from 'expo-router'
+import { useCallback, useEffect, useState } from 'react'
+import {
+  ActivityIndicator,
+  Alert,
+  FlatList,
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+} from 'react-native'
+
+import { Text, View } from '@/components/Themed'
+import { CATEGORY_LABELS } from '@/constants/categories'
+import { useRouteDraft } from '@/contexts/RouteDraftContext'
+import { fetchRouteDirections } from '@/lib/edge'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import { supabase } from '@/lib/supabase'
 import { colors } from '@/theme/colors'
 import { radius } from '@/theme/radius'
 import { spacing } from '@/theme/spacing'
+<<<<<<< HEAD
 import { fontFamilies, typography } from '@/theme/typography'
+=======
+import { typography } from '@/theme/typography'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
 type PlaceRow = {
   id: string
@@ -32,16 +55,25 @@ type PlaceRow = {
   lng: number
 }
 
+<<<<<<< HEAD
 const DOT_COLORS = [colors.crimson, colors.sand, colors.ink, colors.brown, colors.terracotta]
 
 export default function RouteBuilderScreen() {
   const router = useRouter()
   const insets = useSafeAreaInsets()
+=======
+export default function RouteBuilderScreen() {
+  const router = useRouter()
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   const { placeIds, removePlace, moveUp, moveDown, clear } = useRouteDraft()
   const [places, setPlaces] = useState<PlaceRow[]>([])
   const [loading, setLoading] = useState(false)
   const [title, setTitle] = useState('')
+<<<<<<< HEAD
   const [dir, setDir] = useState<{ duration_text: string; distance_meters: number } | null>(null)
+=======
+  const [dir, setDir] = useState<{ duration_text: string } | null>(null)
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   const [dirLoading, setDirLoading] = useState(false)
   const [saving, setSaving] = useState(false)
 
@@ -66,6 +98,27 @@ export default function RouteBuilderScreen() {
     loadPlaces()
   }, [loadPlaces])
 
+<<<<<<< HEAD
+=======
+  async function refreshDirections() {
+    if (places.length < 2) {
+      setDir(null)
+      return
+    }
+    setDirLoading(true)
+    try {
+      const pts = places.map((p) => ({ lat: p.lat, lng: p.lng }))
+      const d = await fetchRouteDirections(pts)
+      setDir(d)
+    } catch (e) {
+      Alert.alert('Yön tarifi', e instanceof Error ? e.message : 'Hata')
+      setDir(null)
+    } finally {
+      setDirLoading(false)
+    }
+  }
+
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   useEffect(() => {
     if (places.length < 2) {
       setDir(null)
@@ -89,6 +142,7 @@ export default function RouteBuilderScreen() {
     }
   }, [places])
 
+<<<<<<< HEAD
   const segmentKm = useMemo(() => {
     const segments: number[] = []
     for (let i = 1; i < places.length; i++) {
@@ -108,6 +162,8 @@ export default function RouteBuilderScreen() {
     return Math.round(totalKm / 5 * 60)
   }, [dir, totalKm])
 
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   async function saveRoute() {
     const t = title.trim()
     if (t.length < 2) {
@@ -171,6 +227,7 @@ export default function RouteBuilderScreen() {
   }
 
   return (
+<<<<<<< HEAD
     <View style={styles.root}>
       <ScreenHeader title="Rota oluştur" rightLabel="Kaydet" onRightPress={saveRoute} />
 
@@ -277,11 +334,77 @@ export default function RouteBuilderScreen() {
           )}
         </Pressable>
       </ScrollView>
+=======
+    <View style={styles.container}>
+      <Text style={styles.label}>Rota adı</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Örn. İstanbul tarihi tur"
+        placeholderTextColor={colors.brown}
+        value={title}
+        onChangeText={setTitle}
+      />
+
+      {dirLoading ? (
+        <Text style={styles.meta}>Tahmini süre hesaplanıyor…</Text>
+      ) : dir ? (
+        <Text style={styles.meta}>Tahmini süre (araç): {dir.duration_text}</Text>
+      ) : places.length >= 2 ? (
+        <Pressable accessibilityRole="button" onPress={refreshDirections}>
+          <Text lightColor={colors.crimson} darkColor={colors.crimsonLight} style={styles.link}>
+            Süreyi yeniden hesapla
+          </Text>
+        </Pressable>
+      ) : (
+        <Text style={styles.meta}>En az iki durak için süre gösterilir.</Text>
+      )}
+
+      <Text style={styles.section}>Duraklar ({places.length})</Text>
+      <FlatList
+        style={styles.list}
+        data={places}
+        keyExtractor={(item) => item.id}
+        ListEmptyComponent={<Text style={styles.empty}>Henüz durak yok. Haritadan veya mekan detayından ekleyin.</Text>}
+        renderItem={({ item, index }) => (
+          <View style={styles.row}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.placeName} lightColor={colors.ink} darkColor={colors.cream}>
+                {item.name}
+              </Text>
+              <Text style={styles.placeMeta}>{CATEGORY_LABELS[item.category] ?? item.category}</Text>
+            </View>
+            <View style={styles.rowBtns}>
+              <Pressable accessibilityRole="button" accessibilityLabel="Yukarı taşı" style={styles.smallBtn} onPress={() => moveUp(index)}>
+                <Text>↑</Text>
+              </Pressable>
+              <Pressable accessibilityRole="button" accessibilityLabel="Aşağı taşı" style={styles.smallBtn} onPress={() => moveDown(index)}>
+                <Text>↓</Text>
+              </Pressable>
+              <Pressable accessibilityRole="button" accessibilityLabel="Durağı kaldır" style={styles.smallBtn} onPress={() => removePlace(item.id)}>
+                <Text>✕</Text>
+              </Pressable>
+            </View>
+          </View>
+        )}
+      />
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Rotayı kaydet"
+        style={[styles.saveBtn, saving && styles.saveBtnDisabled]}
+        onPress={saveRoute}
+        disabled={saving}>
+        <Text lightColor={colors.white} darkColor={colors.white} style={styles.saveText}>
+          {saving ? 'Kaydediliyor…' : 'Rotayı kaydet'}
+        </Text>
+      </Pressable>
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   root: {
     flex: 1,
     backgroundColor: colors.surface,
@@ -438,4 +561,55 @@ const styles = StyleSheet.create({
     ...typography.h3,
     fontSize: 15,
   },
+=======
+  container: { flex: 1, padding: spacing.base },
+  list: { flex: 1 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  label: { ...typography.label, marginBottom: 6 },
+  input: {
+    height: 48,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    borderRadius: radius.full,
+    paddingHorizontal: spacing.md,
+    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
+    marginBottom: spacing.md,
+    ...typography.body,
+    color: colors.ink,
+    backgroundColor: colors.surface,
+  },
+  meta: { ...typography.body, marginBottom: spacing.sm },
+  section: { ...typography.h3, marginVertical: spacing.sm },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 0.5,
+    borderBottomColor: colors.border,
+    gap: spacing.sm,
+  },
+  placeName: { ...typography.h3, fontSize: 16 },
+  placeMeta: { ...typography.caption, marginTop: 2 },
+  rowBtns: { flexDirection: 'row', gap: 6 },
+  smallBtn: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: radius.sm,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    backgroundColor: colors.cream,
+  },
+  empty: { ...typography.body, paddingVertical: spacing.lg },
+  saveBtn: {
+    marginTop: 'auto',
+    height: 48,
+    backgroundColor: colors.crimson,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  saveBtnDisabled: { opacity: 0.6 },
+  saveText: { ...typography.h3, color: colors.white },
+  link: { ...typography.h3, marginBottom: spacing.sm },
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 })

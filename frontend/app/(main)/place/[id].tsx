@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useMemo, useState } from 'react'
@@ -17,12 +18,25 @@ import { CATEGORY_LABELS } from '@/constants/categories'
 import { useCity } from '@/contexts/CityContext'
 import { useRouteDraft } from '@/contexts/RouteDraftContext'
 import { formatKm, haversineKm } from '@/lib/geo'
+=======
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useEffect, useState } from 'react'
+import { ActivityIndicator, Pressable, ScrollView, StyleSheet } from 'react-native'
+
+import { Text, View } from '@/components/Themed'
+import { CATEGORY_LABELS } from '@/constants/categories'
+import { useRouteDraft } from '@/contexts/RouteDraftContext'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import { fetchPlacesWiki } from '@/lib/edge'
 import { supabase } from '@/lib/supabase'
 import { colors } from '@/theme/colors'
 import { radius } from '@/theme/radius'
 import { spacing } from '@/theme/spacing'
+<<<<<<< HEAD
 import { fontFamilies, typography } from '@/theme/typography'
+=======
+import { typography } from '@/theme/typography'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
 type PlaceRow = {
   id: string
@@ -36,15 +50,21 @@ type PlaceRow = {
 export default function PlaceDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>()
   const router = useRouter()
+<<<<<<< HEAD
   const insets = useSafeAreaInsets()
   const { city } = useCity()
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   const { addPlace } = useRouteDraft()
   const [place, setPlace] = useState<PlaceRow | null>(null)
   const [wiki, setWiki] = useState<string | null>(null)
   const [wikiLoading, setWikiLoading] = useState(false)
   const [wikiMsg, setWikiMsg] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+<<<<<<< HEAD
   const [fav, setFav] = useState(false)
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
   useEffect(() => {
     let cancelled = false
@@ -86,6 +106,7 @@ export default function PlaceDetailScreen() {
     }
   }, [place])
 
+<<<<<<< HEAD
   const distanceLabel = useMemo(() => {
     if (!place || !city) return null
     return formatKm(haversineKm(city.lat, city.lng, place.lat, place.lng))
@@ -113,6 +134,8 @@ export default function PlaceDetailScreen() {
     Alert.alert('Konum', `${place.lat.toFixed(5)}, ${place.lng.toFixed(5)}`)
   }
 
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   if (loading) {
     return (
       <View style={styles.center}>
@@ -124,11 +147,16 @@ export default function PlaceDetailScreen() {
   if (!place) {
     return (
       <View style={styles.center}>
+<<<<<<< HEAD
         <Text style={styles.body}>Mekan bulunamadı.</Text>
+=======
+        <Text>Mekan bulunamadı.</Text>
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
       </View>
     )
   }
 
+<<<<<<< HEAD
   const categoryLabel = CATEGORY_LABELS[place.category] ?? place.category
 
   return (
@@ -236,10 +264,52 @@ export default function PlaceDetailScreen() {
         </View>
       </ScrollView>
     </View>
+=======
+  return (
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.title}>{place.name}</Text>
+      <Text style={styles.meta}>
+        {CATEGORY_LABELS[place.category] ?? place.category} · {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
+      </Text>
+
+      <Text style={styles.section}>Wikipedia özeti</Text>
+      {wikiLoading ? (
+        <ActivityIndicator color={colors.crimson} />
+      ) : (
+        <Text style={styles.body}>{wiki ?? wikiMsg ?? 'Özet bulunamadı.'}</Text>
+      )}
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Rotaya ekle"
+        style={({ pressed }) => [styles.primary, pressed && styles.primaryPressed]}
+        onPress={() => {
+          addPlace(place.id)
+          router.push('/route-builder')
+        }}>
+        <Text lightColor={colors.white} darkColor={colors.white} style={styles.primaryText}>
+          Rotaya ekle
+        </Text>
+      </Pressable>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Hasar raporu oluştur"
+        style={({ pressed }) => [styles.secondary, pressed && styles.secondaryPressed]}
+        onPress={() =>
+          router.push({ pathname: '/report/new', params: { placeId: place.id } })
+        }>
+        <Text lightColor={colors.crimson} darkColor={colors.crimsonLight} style={styles.secondaryText}>
+          Hasar raporu oluştur
+        </Text>
+      </Pressable>
+    </ScrollView>
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   )
 }
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   root: {
     flex: 1,
     backgroundColor: colors.cream,
@@ -397,4 +467,33 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.crimson,
   },
+=======
+  container: { padding: spacing.base, paddingBottom: spacing.xl + spacing.base, gap: spacing.md },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  title: { ...typography.h1, fontSize: 22, lineHeight: 28 },
+  meta: { ...typography.body },
+  section: { ...typography.label, marginTop: spacing.sm },
+  body: { ...typography.body },
+  primary: {
+    marginTop: spacing.base,
+    height: 48,
+    backgroundColor: colors.crimson,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  primaryPressed: { backgroundColor: colors.crimsonDark },
+  primaryText: { ...typography.h3, color: colors.white },
+  secondary: {
+    height: 48,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    backgroundColor: colors.cream,
+  },
+  secondaryPressed: { backgroundColor: colors.surface },
+  secondaryText: { ...typography.h3 },
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 })

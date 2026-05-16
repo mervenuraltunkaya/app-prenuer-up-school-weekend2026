@@ -1,12 +1,20 @@
+<<<<<<< HEAD
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import * as FileSystem from 'expo-file-system/legacy'
 import * as ImagePicker from 'expo-image-picker'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { useEffect, useMemo, useState } from 'react'
+=======
+import * as FileSystem from 'expo-file-system/legacy'
+import * as ImagePicker from 'expo-image-picker'
+import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useEffect, useState } from 'react'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import {
   ActivityIndicator,
   Alert,
   Image,
+<<<<<<< HEAD
   Modal,
   Pressable,
   ScrollView,
@@ -18,6 +26,16 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 import { ScreenHeader } from '@/components/ui/ScreenHeader'
+=======
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+} from 'react-native'
+
+import { Text, View } from '@/components/Themed'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import { useCity } from '@/contexts/CityContext'
 import { analyzeDamageImage } from '@/lib/edge'
 import { supabase } from '@/lib/supabase'
@@ -33,7 +51,10 @@ const DESC_MAX = 2000
 
 export default function NewReportScreen() {
   const router = useRouter()
+<<<<<<< HEAD
   const insets = useSafeAreaInsets()
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   const params = useLocalSearchParams<{ placeId?: string }>()
   const { cityId } = useCity()
   const [places, setPlaces] = useState<PlaceRow[]>([])
@@ -42,7 +63,10 @@ export default function NewReportScreen() {
   const [mimeType, setMimeType] = useState('image/jpeg')
   const [description, setDescription] = useState('')
   const [submitting, setSubmitting] = useState(false)
+<<<<<<< HEAD
   const [pickerOpen, setPickerOpen] = useState(false)
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
   useEffect(() => {
     if (params.placeId) setSelectedPlaceId(params.placeId)
@@ -60,11 +84,14 @@ export default function NewReportScreen() {
     }
   }, [cityId])
 
+<<<<<<< HEAD
   const selectedPlace = useMemo(
     () => places.find((p) => p.id === selectedPlaceId) ?? null,
     [places, selectedPlaceId],
   )
 
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   async function pickImage() {
     const perm = await ImagePicker.requestCameraPermissionsAsync()
     const lib = await ImagePicker.requestMediaLibraryPermissionsAsync()
@@ -165,6 +192,7 @@ export default function NewReportScreen() {
   }
 
   return (
+<<<<<<< HEAD
     <View style={styles.root}>
       <ScreenHeader
         title="Hasar raporu"
@@ -270,10 +298,59 @@ export default function NewReportScreen() {
         </Pressable>
       </Modal>
     </View>
+=======
+    <ScrollView contentContainerStyle={styles.container}>
+      <Text style={styles.label}>Mekan</Text>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.chips}>
+        {places.map((p) => (
+          <Pressable
+            key={p.id}
+            style={[styles.chip, selectedPlaceId === p.id && styles.chipOn]}
+            onPress={() => setSelectedPlaceId(p.id)}>
+            <Text style={[styles.chipText, selectedPlaceId === p.id && styles.chipTextOn]}>{p.name}</Text>
+          </Pressable>
+        ))}
+      </ScrollView>
+
+      <Pressable
+        accessibilityRole="button"
+        style={({ pressed }) => [styles.photoBtn, pressed && styles.photoBtnPressed]}
+        onPress={pickImage}>
+        <Text style={styles.photoBtnText}>{imageUri ? 'Fotoğrafı değiştir' : 'Fotoğraf ekle'}</Text>
+      </Pressable>
+      {imageUri ? <Image source={{ uri: imageUri }} style={styles.preview} /> : null}
+
+      <Text style={styles.label}>Açıklama ({DESC_MIN}-{DESC_MAX} karakter)</Text>
+      <TextInput
+        style={styles.area}
+        multiline
+        placeholder="Hasarı ve konumu kısaca anlatın."
+        placeholderTextColor={colors.brown}
+        value={description}
+        onChangeText={setDescription}
+      />
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Analiz et ve gönder"
+        style={[styles.submit, submitting && styles.disabled]}
+        onPress={submit}
+        disabled={submitting}>
+        {submitting ? (
+          <ActivityIndicator color={colors.white} />
+        ) : (
+          <Text lightColor={colors.white} darkColor={colors.white} style={styles.submitText}>
+            Analiz et ve gönder
+          </Text>
+        )}
+      </Pressable>
+    </ScrollView>
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   )
 }
 
 const styles = StyleSheet.create({
+<<<<<<< HEAD
   root: {
     flex: 1,
     backgroundColor: colors.surface,
@@ -341,15 +418,51 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.ink,
   },
+=======
+  container: { padding: spacing.base, paddingBottom: spacing.xl + spacing.base, gap: 10 },
+  label: { ...typography.label, marginTop: spacing.sm },
+  chips: { maxHeight: 44, marginBottom: spacing.sm },
+  chip: {
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: radius.full,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    marginRight: spacing.sm,
+    backgroundColor: colors.cream,
+  },
+  chipOn: {
+    backgroundColor: 'rgba(166, 3, 33, 0.1)',
+    borderColor: colors.crimson,
+  },
+  chipText: { ...typography.caption, color: colors.ink },
+  chipTextOn: { color: colors.crimson, fontFamily: typography.h3.fontFamily },
+  photoBtn: {
+    padding: spacing.md,
+    borderRadius: radius.md,
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    alignItems: 'center',
+    backgroundColor: colors.cream,
+  },
+  photoBtnPressed: { backgroundColor: colors.surface },
+  photoBtnText: { ...typography.h3 },
+  preview: { width: '100%', height: 200, borderRadius: radius.md, resizeMode: 'cover' },
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   area: {
     minHeight: 120,
     borderWidth: 0.5,
     borderColor: colors.border,
+<<<<<<< HEAD
     borderRadius: radius.lg,
+=======
+    borderRadius: radius.md,
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     padding: spacing.md,
     ...typography.body,
     color: colors.ink,
     backgroundColor: colors.surface,
+<<<<<<< HEAD
     marginBottom: spacing.lg,
   },
   aiBox: {
@@ -431,4 +544,18 @@ const styles = StyleSheet.create({
     ...typography.body,
     color: colors.ink,
   },
+=======
+    textAlignVertical: 'top',
+  },
+  submit: {
+    marginTop: spacing.base,
+    height: 48,
+    backgroundColor: colors.crimson,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  submitText: { ...typography.h3, color: colors.white },
+  disabled: { opacity: 0.7 },
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 })

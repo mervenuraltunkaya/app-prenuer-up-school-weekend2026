@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 import FontAwesome from '@expo/vector-icons/FontAwesome'
 import type { ComponentProps } from 'react'
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import * as ImagePicker from 'expo-image-picker'
 import { useRouter } from 'expo-router'
 import { useCallback, useEffect, useState } from 'react'
@@ -7,6 +10,7 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+<<<<<<< HEAD
   Modal,
   Pressable,
   ScrollView,
@@ -17,11 +21,21 @@ import {
 } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
+=======
+  Platform,
+  Pressable,
+  StyleSheet,
+  TextInput,
+} from 'react-native'
+
+import { Text, View } from '@/components/Themed'
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { colors } from '@/theme/colors'
 import { radius } from '@/theme/radius'
 import { spacing } from '@/theme/spacing'
+<<<<<<< HEAD
 import { fontFamilies, typography } from '@/theme/typography'
 
 type Stats = {
@@ -42,10 +56,22 @@ export default function ProfileScreen() {
   const [stats, setStats] = useState<Stats>({ routes: 0, places: 0, reports: 0 })
   const [editOpen, setEditOpen] = useState(false)
   const [editName, setEditName] = useState('')
+=======
+import { typography } from '@/theme/typography'
+
+export default function ProfileScreen() {
+  const router = useRouter()
+  const { user, signOut } = useAuth()
+  const [fullName, setFullName] = useState('')
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 
   const load = useCallback(async () => {
     if (!user) return
     setLoading(true)
+<<<<<<< HEAD
     const [{ data: profile }, routesRes, reportsRes] = await Promise.all([
       supabase.from('profiles').select('full_name, avatar_url').eq('id', user.id).maybeSingle(),
       supabase.from('routes').select('id', { count: 'exact', head: true }).eq('user_id', user.id),
@@ -83,6 +109,13 @@ export default function ProfileScreen() {
       places: placeCount,
       reports: reportsRes.count ?? 0,
     })
+=======
+    const { data } = await supabase.from('profiles').select('full_name, avatar_url').eq('id', user.id).maybeSingle()
+    if (data) {
+      setFullName(data.full_name ?? '')
+      setAvatarUrl(data.avatar_url)
+    }
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     setLoading(false)
   }, [user])
 
@@ -95,6 +128,7 @@ export default function ProfileScreen() {
     setSaving(true)
     const { error } = await supabase
       .from('profiles')
+<<<<<<< HEAD
       .update({ full_name: editName.trim() })
       .eq('id', user.id)
     setSaving(false)
@@ -104,6 +138,13 @@ export default function ProfileScreen() {
       setEditOpen(false)
       Alert.alert('Kaydedildi', 'Profil güncellendi.')
     }
+=======
+      .update({ full_name: fullName.trim() })
+      .eq('id', user.id)
+    setSaving(false)
+    if (error) Alert.alert('Kayıt', error.message)
+    else Alert.alert('Kaydedildi', 'Profil güncellendi.')
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   }
 
   async function pickAvatar() {
@@ -119,10 +160,13 @@ export default function ProfileScreen() {
     })
     if (result.canceled || !result.assets[0]) return
     const asset = result.assets[0]
+<<<<<<< HEAD
 
     setAvatarUrl(asset.uri)
     setAvatarVersion((v) => v + 1)
 
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     const ext = asset.mimeType?.includes('png')
       ? 'png'
       : asset.mimeType?.includes('webp')
@@ -150,6 +194,7 @@ export default function ProfileScreen() {
       .from('profiles')
       .update({ avatar_url: publicUrl })
       .eq('id', user.id)
+<<<<<<< HEAD
     if (dbErr) {
       Alert.alert('Kayıt', dbErr.message)
       void load()
@@ -159,6 +204,10 @@ export default function ProfileScreen() {
     const busted = `${publicUrl}${publicUrl.includes('?') ? '&' : '?'}v=${Date.now()}`
     setAvatarUrl(busted)
     setAvatarVersion((v) => v + 1)
+=======
+    if (dbErr) Alert.alert('Kayıt', dbErr.message)
+    else setAvatarUrl(publicUrl)
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   }
 
   async function onSignOut() {
@@ -166,8 +215,11 @@ export default function ProfileScreen() {
     router.replace('/login')
   }
 
+<<<<<<< HEAD
   const initial = (fullName || user?.email || 'N').charAt(0).toUpperCase()
 
+=======
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
   if (loading) {
     return (
       <View style={styles.center}>
@@ -177,6 +229,7 @@ export default function ProfileScreen() {
   }
 
   return (
+<<<<<<< HEAD
     <View style={styles.root}>
       <ScrollView
         bounces={false}
@@ -296,10 +349,52 @@ export default function ProfileScreen() {
           </View>
         </View>
       </Modal>
+=======
+    <View style={styles.container}>
+      <Pressable accessibilityRole="button" accessibilityLabel="Avatar seç" style={styles.avatarWrap} onPress={pickAvatar}>
+        {avatarUrl ? (
+          <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+        ) : (
+          <View style={[styles.avatar, styles.avatarPh]}>
+            <Text>Foto</Text>
+          </View>
+        )}
+        <Text lightColor={colors.crimson} darkColor={colors.crimsonLight} style={styles.avatarHint}>
+          Avatarı değiştir
+        </Text>
+      </Pressable>
+
+      <Text style={styles.label}>Ad Soyad</Text>
+      <TextInput
+        style={styles.input}
+        value={fullName}
+        onChangeText={setFullName}
+        placeholder="Ad Soyad"
+        placeholderTextColor={colors.brown}
+      />
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="Profili kaydet"
+        style={({ pressed }) => [styles.primary, pressed && styles.primaryPressed, saving && styles.disabled]}
+        onPress={saveProfile}
+        disabled={saving}>
+        <Text lightColor={colors.white} darkColor={colors.white} style={styles.primaryText}>
+          {saving ? 'Kaydediliyor…' : 'Kaydet'}
+        </Text>
+      </Pressable>
+
+      <Pressable accessibilityRole="button" accessibilityLabel="Çıkış yap" style={styles.signOut} onPress={onSignOut}>
+        <Text lightColor={colors.crimsonDark} darkColor={colors.terracotta} style={styles.signOutText}>
+          Çıkış yap
+        </Text>
+      </Pressable>
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     </View>
   )
 }
 
+<<<<<<< HEAD
 function MenuRow({
   icon,
   label,
@@ -483,11 +578,29 @@ const styles = StyleSheet.create({
     marginBottom: spacing.sm,
   },
   modalInput: {
+=======
+const styles = StyleSheet.create({
+  container: { flex: 1, padding: spacing.base, gap: 10 },
+  center: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  avatarWrap: { alignItems: 'center', marginBottom: spacing.base },
+  avatar: { width: 96, height: 96, borderRadius: 48 },
+  avatarPh: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 0.5,
+    borderColor: colors.border,
+    backgroundColor: colors.surface,
+  },
+  avatarHint: { ...typography.h3, marginTop: spacing.sm },
+  label: { ...typography.label },
+  input: {
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
     height: 48,
     borderWidth: 0.5,
     borderColor: colors.border,
     borderRadius: radius.full,
     paddingHorizontal: spacing.md,
+<<<<<<< HEAD
     ...typography.body,
     color: colors.ink,
     backgroundColor: colors.surface,
@@ -525,4 +638,24 @@ const styles = StyleSheet.create({
     ...typography.h3,
     color: colors.white,
   },
+=======
+    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
+    ...typography.body,
+    color: colors.ink,
+    backgroundColor: colors.surface,
+  },
+  primary: {
+    height: 48,
+    backgroundColor: colors.crimson,
+    borderRadius: radius.full,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: spacing.sm,
+  },
+  primaryPressed: { backgroundColor: colors.crimsonDark },
+  primaryText: { ...typography.h3, color: colors.white },
+  disabled: { opacity: 0.6 },
+  signOut: { marginTop: spacing.lg, alignItems: 'center', padding: spacing.md },
+  signOutText: { ...typography.h3 },
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
 })

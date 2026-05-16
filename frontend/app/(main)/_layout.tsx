@@ -18,9 +18,15 @@ export default function MainLayout() {
       <Stack screenOptions={headerOptions}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="city-select" options={{ title: 'Şehir seç', presentation: 'modal' }} />
+<<<<<<< HEAD
         <Stack.Screen name="place/[id]" options={{ headerShown: false }} />
         <Stack.Screen name="route-builder" options={{ headerShown: false }} />
         <Stack.Screen name="report/new" options={{ headerShown: false, presentation: 'modal' }} />
+=======
+        <Stack.Screen name="place/[id]" options={{ title: 'Mekan detayı' }} />
+        <Stack.Screen name="route-builder" options={{ title: 'Rota oluştur' }} />
+        <Stack.Screen name="report/new" options={{ title: 'Hasar raporu' }} />
+>>>>>>> 0229edf4646607f58a1dd422da59b64a3aab9621
       </Stack>
     </RouteDraftProvider>
   )
