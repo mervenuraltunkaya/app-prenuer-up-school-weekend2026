@@ -1,0 +1,65 @@
+---
+globs: /frontend
+alwaysApply: false
+---
+
+You are an expert in TypeScript, React Native, Expo, and Mobile UI development.
+
+## Code Style and Structure
+- Write concise, technical TypeScript code with accurate examples.
+- Use functional and declarative programming patterns; avoid classes.
+- Prefer iteration and modularization over code duplication.
+- Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+- Structure files: exported component, subcomponents, helpers, static content, types.
+- Follow Expo's official documentation for setting up and configuring: https://docs.expo.dev/
+
+## Naming Conventions
+- Use lowercase with dashes for directories (e.g., components/auth-wizard).
+- Favor named exports for components.
+
+## TypeScript Usage
+- Use TypeScript for all code; prefer interfaces over types.
+- Avoid enums; use maps or union types instead.
+- Use functional components with TypeScript interfaces.
+- Use strict mode in TypeScript for better type safety.
+
+## UI and Styling (NativeWind)
+- Use Expo's built-in components for common UI patterns and layouts.
+- Implement responsive design with Flexbox and Expo's `useWindowDimensions`.
+- **STRICT RULE:** Use NativeWind (Tailwind CSS for React Native) for all component styling. Avoid `StyleSheet.create`.
+- Implement dark mode support using Expo's `useColorScheme` or NativeWind's dark mode classes.
+- Leverage `react-native-reanimated` and `react-native-gesture-handler` for performant animations.
+
+## Safe Area Management
+- Use `SafeAreaProvider` from `react-native-safe-area-context` globally.
+- Wrap top-level components with `SafeAreaView` to handle notches and status bars.
+- Use `SafeAreaScrollView` (or add contentContainerStyle padding) for scrollable content.
+
+## Performance Optimization
+- Optimize images: Implement lazy loading and aggressive caching with `expo-image`.
+- Use Expo's `expo-splash-screen` for optimized app startup experience (Do NOT use the deprecated AppLoading).
+- Avoid unnecessary re-renders by memoizing components and using `useMemo` and `useCallback` appropriately.
+
+## Navigation (Expo Router)
+- **STRICT RULE:** Use `expo-router` for all routing and navigation (file-based routing).
+- Follow best practices for stack and tab navigators within the `/app` directory.
+- Leverage deep linking using `expo-linking`.
+
+## State Management & Data Fetching
+- Use React Context for lightweight global state.
+- Leverage `react-query` or `swr` for data fetching and caching API responses (especially for Google Places API).
+- **Backend:** Use the `@supabase/supabase-js` client for database queries, Auth, and Storage. Isolate Supabase calls in a `/services` folder.
+
+## Error Handling and Validation
+- Use `Zod` for runtime validation (e.g., parsing form inputs or API responses).
+- Prioritize edge cases: Use early returns for error conditions to avoid deeply nested if statements.
+- Handle Gemini 2.5 Flash API timeouts and Supabase offline states gracefully.
+
+## Security & Permissions
+- Use `expo-secure-store` for secure storage of sensitive data (auth tokens, etc.).
+- Handle device permissions gracefully using the specific module APIs (e.g., `expo-camera.requestCameraPermissionsAsync()`, `expo-location.requestForegroundPermissionsAsync()`). Do NOT use the deprecated expo-permissions.
+
+## Key Conventions for Nomad MVP
+1. Rely on Expo's managed workflow (Expo Go compatible where possible).
+2. Use `expo-constants` for managing environment variables (Supabase URL, Gemini API Key).
+3. Ensure the Map component (`react-native-maps`) is optimized to handle multiple markers without jank.

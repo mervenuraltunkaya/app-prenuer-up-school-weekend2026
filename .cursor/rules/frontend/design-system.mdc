@@ -1,22 +1,28 @@
 ---
-description: SmartScan tasarım sistemi zorunlu uygulama kuralı
-alwaysApply: true
+description: Nomad UI — DESIGN_SYSTEM.md tek kaynak; renk, tipografi, spacing ve bileşenler
+globs: frontend/**/*
+alwaysApply: false
 ---
 
-# SmartScan Design System (Always Apply)
+# Nomad Design System (zorunlu)
 
-Bu projede UI geliştirirken tek kaynak `/.cursor/rules/frontend/design-system.md` dosyasıdır. Yeni ekran, component veya stil değişikliklerinde aşağıdaki kurallar zorunludur:
+Tüm Expo / React Native arayüzü, tema ve stil değişikliklerinde **tek otorite**:
 
-- Renk, tipografi, spacing, radius, elevation ve gradient değerlerini sadece design system token'larından kullan.
-- Hardcoded renk, ölçü, font boyutu veya rastgele padding/margin yazma; önce token/sabit ekle, sonra kullan.
-- Flutter tarafında tema ve sabitler üzerinden ilerle (`ThemeData`, `AppColors`, `AppSpacing`, `AppRadius`, metin stilleri).
-- Minimum dokunma alanı `48x48dp` altında interaktif eleman üretme.
-- Trafik ışığı sisteminde renk tek başına anlam taşımamalı; her zaman ikon + metin etiketi birlikte gösterilmeli.
-- Sonuç, uyarı ve AI bilgilendirme metinleri için design system'deki semantik renkleri ve kart yapısını kullan.
-- Kamera ve sonuç akışında Bottom Sheet, animasyon süresi ve geçiş davranışlarını design system'deki UX/motion kurallarıyla uyumlu tut.
-- Erişilebilirlikte kontrast, semanticLabel ve text scale uyumluluğunu koru.
+`.cursor/rules/frontend/DESIGN_SYSTEM.md`
 
-## Uygulama Notu
+## Yapılması gerekenler
 
-- Bir tasarım kararı belirsizse önce `design-system.md` içindeki ilgili bölüm (renk, bileşen, motion, erişilebilirlik) esas alınır.
-- Çakışma durumunda bu kural ve `design-system.md`, genel frontend kurallarına göre önceliklidir.
+- UI veya tema yazmadan / değiştirmeden önce ilgili bölümleri **DESIGN_SYSTEM.md** içinde oku (renkler, tipografi, 8px spacing, radius, buton/input/chip/kart kalıpları, erişilebilirlik, motion).
+- Yeni renk, font boyutu, spacing veya radius **uydurma**; dokümandaki token ve hex değerlerine uy. Merkezi `theme/` veya paylaşılan sabitler varsa onları kullan; yoksa eklerken dokümanla hizala.
+- Semantik renkler (hasar / rapor durumları) için dokümandaki tabloları kullan; rastgele yeşil/kırmızı/sarı tonları ekleme.
+- Tipografi: **Playfair Display** (H1/H2), **DM Sans** (gövde, UI); tokenlar (`h1`–`label`) dokümandaki gibi.
+- Grid: spacing tokenları (`xs` 4px … `xxl` 48px); border radius tokenları (`sm`–`full`).
+- Bileşen varyantları (primary/secondary/outline/small buton, input, chip, kart, bottom sheet, toast) için dokümandaki ölçü ve stilleri referans al.
+
+## NativeWind / className
+
+Projede NativeWind kullanılıyorsa stilleri `className` ile ver; tasarım değerleri yine **DESIGN_SYSTEM.md** ile aynı olmalı (Tailwind’de özel tema genişletmesi varsa tokenları oraya yansıt).
+
+## Özet
+
+Özet veya kısayol üretme: belirsiz kaldığında **DESIGN_SYSTEM.md**’ye dön. Bu rule, o dosyanın sürekli uygulanmasını hatırlatır; detay kopyalanmaz.
