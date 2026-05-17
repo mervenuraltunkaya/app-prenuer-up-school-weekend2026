@@ -1,15 +1,31 @@
-import { DataConfigAlert } from '@/components/admin/data-config-alert'
-import { ReportsTable } from '@/components/admin/reports-table'
-import { fetchDamageReports, isAdminConfigured } from '@/lib/data'
+import { DataConfigAlert } from "@/components/admin/data-config-alert";
+import { AdminHeader } from "@/components/admin/admin-header";
+import { AdminStats } from "@/components/admin/admin-stats";
+import { ReportsTable } from "@/components/admin/reports-table";
+import {
+  fetchDamageReports,
+  fetchDashboardStats,
+  isAdminConfigured,
+} from "@/lib/data";
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default async function AdminReportsPage() {
   if (!isAdminConfigured()) {
-    return <DataConfigAlert />
+    return <DataConfigAlert />;
   }
 
-  const reports = await fetchDamageReports()
+  const [reports, stats] = await Promise.all([
+    fetchDamageReports(),
+    fetchDashboardStats(),
+  ]);
 
-  return <ReportsTable data={reports} />
+  return (
+    <div className="space-y-6">
+      <AdminHeader />
+      <AdminStats stats={stats} />
+      <ReportsTable data={reports} />
+    </div>
+  );
 }
+
